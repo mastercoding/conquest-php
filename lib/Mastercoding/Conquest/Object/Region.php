@@ -36,7 +36,7 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
     /**
      * Owner of this region
      *
-     * @var \Mastercoding\Conquest\Object\Owner
+     * @var \Mastercoding\Conquest\Object\Owner\AbstractOwner
      */
     private $owner;
 
@@ -131,7 +131,7 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
      *
      * @param Owner
      */
-    public function setOwner(Owner $owner)
+    public function setOwner(\Mastercoding\Conquest\Object\Owner\AbstractOwner $owner)
     {
         $this->owner = $owner;
         return $this;
@@ -140,7 +140,7 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
     /**
      * Get owner
      *
-     * @return Owner
+     * @return \Mastercoding\Conquest\Object\Owner\AbstractOwner
      */
     public function getOwner()
     {

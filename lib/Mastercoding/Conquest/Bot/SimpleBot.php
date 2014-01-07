@@ -31,7 +31,7 @@ class SimpleBot extends AbstractBot
 
         // moves
         $placeArmiesMove = new \Mastercoding\Conquest\Move\PlaceArmies;
-        $placeArmiesMove->addPlaceArmies($first->getId(), $amount);
+        $placeArmiesMove->addPlaceArmies($first, $amount);
         return $placeArmiesMove;
 
     }

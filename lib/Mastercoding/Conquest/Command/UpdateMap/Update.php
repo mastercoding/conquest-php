@@ -21,16 +21,12 @@ class Update extends \Mastercoding\Conquest\Command\AbstractCommand implements \
         // set timeout
         $update = new self();
 
-        // the updates
-        $updates = array();
-
         // loop updates
         for ($i = 1; $i < count($components); $i += 3) {
-            $updates[] = array('regionId' => $components[$i], 'owner' => $components[$i + 1], 'armies' => $components[$i + 2]);
+            $update->addUpdate(array('regionId' => $components[$i], 'owner' => $components[$i + 1], 'armies' => $components[$i + 2]));
         }
 
         // set and return
-        $update->setUpdates($updates);
         return $update;
 
     }
@@ -44,13 +40,13 @@ class Update extends \Mastercoding\Conquest\Command\AbstractCommand implements \
     }
 
     /**
-     * Set region ids
+     * Add update
      *
-     * @param Array $regionIds
+     * @param Array $update
      */
-    public function setUpdates($updates)
+    public function addUpdate($update)
     {
-        $this->updates = $updates;
+        $this->updates[] = $update;
         return $this;
     }
 

@@ -87,13 +87,32 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $map->getRegionById(1)->getNeighbors());
         $this->assertCount(3, $map->getRegionById(4)->getNeighbors());
         $this->assertCount(1, $map->getRegionById(7)->getNeighbors());
-        
+
         return $map;
-        
+
     }
 
     /**
      * @depends testSetupNeighbors
+     */
+    public function testSetupPlayers(\Mastercoding\Conquest\Object\Map $map)
+    {
+
+        // create continents setup
+        $playersUpdate = new \Mastercoding\Conquest\Command\Settings\Player('your_bot', 'player2');
+        $this->mapUpdater->addPlayer($map, $playersUpdate);
+        $this->assertCount(1, $map->getPlayers());
+
+        $playersUpdate = new \Mastercoding\Conquest\Command\Settings\Player('opponent_bot', 'player1');
+        $this->mapUpdater->addPlayer($map, $playersUpdate);
+        $this->assertCount(2, $map->getPlayers());
+
+        return $map;
+
+    }
+
+    /**
+     * @depends testSetupPlayers
      */
     public function testUpdateMap(\Mastercoding\Conquest\Object\Map $map)
     {
@@ -101,21 +120,23 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         // create continents setup
         $mapUpdate = new \Mastercoding\Conquest\Command\UpdateMap\Update;
 
-        // add test continents: region id, array neighbor regions
-        $neighborsUpdate->setNeighbor(1, array(2, 3));
-        $neighborsUpdate->setNeighbor(2, array(4));
-        $neighborsUpdate->setNeighbor(3, array(4));
-        $neighborsUpdate->setNeighbor(4, array(7));
-        $neighborsUpdate->expand();
+        // add some updates
+        $mapUpdate->addUpdate(array('regionId' => 1, 'owner' => 'neutral', 'armies' => 2));
+        $mapUpdate->addUpdate(array('regionId' => 2, 'owner' => 'player1', 'armies' => 3));
+        $mapUpdate->addUpdate(array('regionId' => 4, 'owner' => 'neutral', 'armies' => 4));
+        $mapUpdate->addUpdate(array('regionId' => 7, 'owner' => 'neutral', 'armies' => 5));
 
         // process
-        $this->mapUpdater->setupNeighbors($map, $neighborsUpdate);
+        $this->mapUpdater->updateMap($map, $mapUpdate);
 
-        // validate
-        $this->assertCount(2, $map->getRegionById(1)->getNeighbors());
-        $this->assertCount(3, $map->getRegionById(4)->getNeighbors());
-        $this->assertCount(1, $map->getRegionById(7)->getNeighbors());
+        // assert owners
+        $this->assertEquals('neutral', $map->getRegionById(1)->getOwner()->getName());
+        $this->assertEquals('player1', $map->getRegionById(2)->getOwner()->getName());
+        $this->assertEquals('unknown', $map->getRegionById(3)->getOwner()->getName());
 
+        // asert armies
+        $this->assertEquals(4, $map->getRegionById(4)->getArmies());
+        $this->assertEquals(2, $map->getRegionById(1)->getArmies());
     }
 
     public function testStartingArmies()

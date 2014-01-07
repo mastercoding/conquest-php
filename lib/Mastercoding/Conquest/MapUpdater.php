@@ -113,6 +113,17 @@ class MapUpdater
             $region->setArmies($update['armies']);
 
             // owner
+            if ($update['owner'] == 'neutral') {
+                $region->setOwner(new \Mastercoding\Conquest\Object\Owner\Neutral);
+            } else {
+
+                foreach ($map->getPlayers() as $player) {
+                    if ($player->getName() == $update['owner']) {
+                        $region->setOwner($player);
+                    }
+                }
+
+            }
 
         }
 

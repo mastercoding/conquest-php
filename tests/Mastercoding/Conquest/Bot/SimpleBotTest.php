@@ -117,7 +117,6 @@ class SimpleBotTest extends \PHPUnit_Framework_TestCase
 
         // should be a place armies
         $this->assertInstanceOf('\\Mastercoding\\Conquest\\Move\\PlaceArmies', $move);
-
         return $bot;
 
     }

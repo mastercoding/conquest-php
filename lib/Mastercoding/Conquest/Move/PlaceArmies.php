@@ -11,21 +11,27 @@ class PlaceArmies extends AbstractMove
      */
     private $regions;
 
-    public function addPlaceArmies(Region $region, $armies)
-    {
-
-        $this->regions[$region->getId()] = $armies;
-
-    }
-    
     /**
-     * Conver to string
+     *
+     * Add place armies
+     *
+     * @param \Mastercoding\Conquest\Object\Region $region
+     * @param int $armies
+     */
+    public function addPlaceArmies(\Mastercoding\Conquest\Object\Region $region, $armies)
+    {
+        $this->regions[$region->getId()] = $armies;
+        return $this;
+    }
+
+    /**
+     * Convert to string
      */
     public function toString()
     {
 
         $regions = array();
-        foreach ($this->Regions as $regionId => $armies) {
+        foreach ($this->regions as $regionId => $armies) {
 
             $regions[] = sprintf('{{you}} place_armies %d %d', (int)$regionId, (int)$armies);
 

@@ -34,6 +34,9 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
     {
         $this->continents = new \SplObjectStorage;
         $this->players = new \SplObjectStorage;
+        
+        // 5 as default
+        $this->startingArmies = 5;
     }
 
     /**

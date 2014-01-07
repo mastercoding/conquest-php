@@ -20,7 +20,7 @@ while ($line = trim(fgets(STDIN))) {
     if (null !== $move) {
 
         // output moves
-        \Mastercoding\Conquest\Output::move($move);
+        \Mastercoding\Conquest\Output::move($bot, $move);
 
     }
 
