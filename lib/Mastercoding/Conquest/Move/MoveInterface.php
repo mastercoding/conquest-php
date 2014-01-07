@@ -1,6 +1,6 @@
 <?php
 
-namespace Mastercoding\Conquest\Command;
+namespace Mastercoding\Conquest\Move;
 
 interface MoveInterface
 {

@@ -15,12 +15,13 @@ while ($line = trim(fgets(STDIN))) {
 
     // parse command
     $command = $commandParser->parse($line);
-    $bot->processCommand($command);
+    $move = $bot->processCommand($command);
 
-    // get moves
-    $moves = $bot->getMoves();
+    if (null !== $move) {
 
-    // output moves
-    \Mastercoding\Conquest\Output::moves($moves);
+        // output moves
+        \Mastercoding\Conquest\Output::move($move);
+
+    }
 
 }

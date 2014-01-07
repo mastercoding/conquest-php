@@ -15,6 +15,7 @@ class Parser implements ParserInterface
     {
 
         // seperate components
+        $line = trim($line);
         $components = explode(' ', $line);
 
         // designator
@@ -26,12 +27,14 @@ class Parser implements ParserInterface
                 return \Mastercoding\Conquest\Command\SetupMapParser::parse($line);
             case 'go':
                 return \Mastercoding\Conquest\Command\GoParser::parse($line);
-                
+
             case 'pick_starting_regions':
                 return \Mastercoding\Conquest\Command\StartingRegions\Pick::create($components);
             case 'update_map':
                 return \Mastercoding\Conquest\Command\UpdateMap\Update::create($components);
         }
+
+        return null;
 
     }
 

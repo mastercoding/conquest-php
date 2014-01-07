@@ -6,9 +6,24 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
 {
 
     /**
+     * A map has a few players (two for now)
+     *
+     * @var \SplObjectStorage
+     */
+    private $players;
+
+    /**
+     * The number of armies you start with every round. This increases
+     * by capturing continents
+     *
+     * @var int
+     */
+    private $startingArmies;
+
+    /**
      * A map has a few continents
      *
-     * @var SplObjectStorage
+     * @var \SplObjectStorage
      */
     private $continents;
 
@@ -18,6 +33,66 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
     public function __construct()
     {
         $this->continents = new \SplObjectStorage;
+        $this->players = new \SplObjectStorage;
+    }
+
+    /**
+     * Set the starting armies amount
+     *
+     * @param int
+     */
+    public function setStartingArmies($amount)
+    {
+        $this->startingArmies = $amount;
+        return $this;
+    }
+
+    /**
+     * Get the starting armies amount
+     *
+     * @return int
+     */
+    public function getStartingArmies()
+    {
+        return $this->startingArmies;
+    }
+
+    /**
+     * Add a player to the map
+     *
+     * @param Owner\Player $player
+     */
+    public function addPlayer(Owner\Player $player)
+    {
+        $this->players->attach($player);
+        return $this;
+    }
+
+    /**
+     * Get your player object (your_bot)
+     *
+     * @return Owner\Player
+     */
+    public function getYou()
+    {
+
+        foreach ($this->players as $player) {
+            if ($player->getWho() == Owner\Player::YOU) {
+                return $player;
+            }
+
+        }
+
+    }
+
+    /**
+     * Get players
+     *
+     * @return array
+     */
+    public function getPlayers()
+    {
+        return $this->players;
     }
 
     /**
@@ -29,6 +104,16 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
     {
         $this->continents->attach($continent);
         return $this;
+    }
+
+    /**
+     * Get all continents
+     *
+     * @return array
+     */
+    public function getContinents()
+    {
+        return $this->continents;
     }
 
     /**
@@ -72,6 +157,31 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
 
         // not found
         return null;
+    }
+
+    /**
+     * Get regions for player
+     *
+     * @return Array
+     */
+    public function getRegionsForPlayer(Owner\Player $player)
+    {
+
+        $myRegions = new \SplObjectStorage;
+        foreach ($this->getContinents() as $continent) {
+
+            foreach ($continent->getRegions() as $region) {
+                
+                if ($region->getOwner()->getName() == $player->getName()) {
+                    $myRegions->attach($region);
+                }
+
+            }
+
+        }
+
+        return $myRegions;
+
     }
 
 }

@@ -51,6 +51,7 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
         $this->id = $id;
         $this->continentId = $continentId;
         $this->neighbors = new \SplObjectStorage;
+        $this->owner = new \Mastercoding\Conquest\Object\Owner\Unknown;
     }
 
     /**

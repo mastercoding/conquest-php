@@ -17,6 +17,7 @@ abstract class AbstractBot implements BotInterface
      */
     public function __construct()
     {
+        $this->map = new \Mastercoding\Conquest\Object\Map;
     }
 
     /**
@@ -43,11 +44,26 @@ abstract class AbstractBot implements BotInterface
     /**
      * @inheritDoc
      */
-    public function processCommand(\Mastercoding\Conquest\Command $command)
+    public function processCommand(\Mastercoding\Conquest\Command\AbstractCommand $command = null)
     {
+
+        // any?
+        if (null === $command) {
+            return null;
+        }
 
         // process command
         switch ( $command->getName() ) {
+
+            case 'Settings\Player':
+                $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
+                $mapUpdater->addPlayer($this->getMap(), $command);
+                break;
+
+            case 'Settings\StartingArmies':
+                $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
+                $mapUpdater->updateStartingArmies($this->getMap(), $command);
+                break;
 
             case 'SetupMap\Continents':
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
@@ -68,16 +84,17 @@ abstract class AbstractBot implements BotInterface
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateMap($this->getMap(), $command);
                 break;
+
+            case 'StartingRegions\Pick':
+                return $this->pickRegions($command);
+
+            case 'Go\PlaceArmies':
+                return $this->placeArmies($command);
+
+            case 'Go\AttackTransfer':
+                return $this->attackTransfer($command);
         }
 
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMoves()
-    {
-        return array(new \Mastercoding\Conquest\Move\NoMoves());
     }
 
 }

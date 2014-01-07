@@ -87,7 +87,80 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $map->getRegionById(1)->getNeighbors());
         $this->assertCount(3, $map->getRegionById(4)->getNeighbors());
         $this->assertCount(1, $map->getRegionById(7)->getNeighbors());
+        
+        return $map;
+        
+    }
 
+    /**
+     * @depends testSetupNeighbors
+     */
+    public function testUpdateMap(\Mastercoding\Conquest\Object\Map $map)
+    {
+
+        // create continents setup
+        $mapUpdate = new \Mastercoding\Conquest\Command\UpdateMap\Update;
+
+        // add test continents: region id, array neighbor regions
+        $neighborsUpdate->setNeighbor(1, array(2, 3));
+        $neighborsUpdate->setNeighbor(2, array(4));
+        $neighborsUpdate->setNeighbor(3, array(4));
+        $neighborsUpdate->setNeighbor(4, array(7));
+        $neighborsUpdate->expand();
+
+        // process
+        $this->mapUpdater->setupNeighbors($map, $neighborsUpdate);
+
+        // validate
+        $this->assertCount(2, $map->getRegionById(1)->getNeighbors());
+        $this->assertCount(3, $map->getRegionById(4)->getNeighbors());
+        $this->assertCount(1, $map->getRegionById(7)->getNeighbors());
+
+    }
+
+    public function testStartingArmies()
+    {
+
+        // map
+        $map = new \Mastercoding\Conquest\Object\Map;
+
+        // command
+        $startingArmiesCommand = new \Mastercoding\Conquest\Command\Settings\StartingArmies(4);
+
+        // process
+        $this->mapUpdater->updateStartingArmies($map, $startingArmiesCommand);
+
+        // validate
+        $this->assertEquals(4, $map->getStartingArmies());
+
+    }
+
+    public function testPlayers()
+    {
+
+        // map
+        $map = new \Mastercoding\Conquest\Object\Map;
+
+        // command
+        $playerCommand = new \Mastercoding\Conquest\Command\Settings\Player('your_bot', 'player1');
+
+        // process
+        $this->mapUpdater->addPlayer($map, $playerCommand);
+
+        // validate
+        $this->assertCount(1, $map->getPlayers());
+
+        // command
+        $playerCommand = new \Mastercoding\Conquest\Command\Settings\Player('opponent_bot', 'player2');
+
+        // process
+        $this->mapUpdater->addPlayer($map, $playerCommand);
+
+        // validate
+        $this->assertCount(2, $map->getPlayers());
+
+        // you
+        $this->assertEquals('player1', $map->getYou()->getName());
     }
 
 }

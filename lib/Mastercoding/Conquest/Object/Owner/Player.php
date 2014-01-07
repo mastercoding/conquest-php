@@ -6,6 +6,20 @@ class Player extends AbstractOwner
 {
 
     /**
+     * You
+     *
+     * @var string
+     */
+    const YOU = 'your_bot';
+
+    /**
+     * The opponent
+     *
+     * @var string
+     */
+    const OPPONENT = 'opponent_bot';
+
+    /**
      * Who (your_bot, opponent_bot)
      *
      * @var string

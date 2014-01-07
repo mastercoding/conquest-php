@@ -2,11 +2,12 @@
 
 namespace Mastercoding\Conquest\Object\Owner;
 
-class Neutral extends AbstractOwner
+class Unknown extends AbstractOwner
 {
+
     public function __construct()
     {
-        parent::__construct('neutral');
+        parent::__construct('unknown');
     }
 
 }

@@ -9,6 +9,32 @@ class MapUpdater
 {
 
     /**
+     * Settings, add player
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Command\Settings\Player
+     * $continentsCommand
+     *
+     */
+    public function addPlayer(\Mastercoding\Conquest\Object\Map $map, \Mastercoding\Conquest\Command\Settings\Player $playerCommand)
+    {
+        $map->addPlayer($playerCommand->getPlayer());
+    }
+
+    /**
+     * Settings, starting armies
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Command\Settings\Player
+     * $continentsCommand
+     *
+     */
+    public function updateStartingArmies(\Mastercoding\Conquest\Object\Map $map, \Mastercoding\Conquest\Command\Settings\StartingArmies $startingArmiesCommand)
+    {
+        $map->setStartingArmies($startingArmiesCommand->getAmount());
+    }
+
+    /**
      * Setup continents for the map
      *
      * @param \Mastercoding\Conquest\Object\Map $map

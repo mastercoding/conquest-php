@@ -2,7 +2,7 @@
 
 namespace Mastercoding\Conquest\Move;
 
-class NoMoves extends AbstractMove
+class NoMove extends AbstractMove
 {
 
     public function toString()

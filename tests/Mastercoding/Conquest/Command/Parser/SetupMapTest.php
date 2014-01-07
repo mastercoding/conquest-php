@@ -74,7 +74,6 @@ class SetupMapTest extends \PHPUnit_Framework_TestCase
 
         $neighbors = $command->getNeighbors();
         foreach ($regions as $regionId => $neighborIds) {
-
             $this->assertEquals(count($neighborIds), count($neighbors[$regionId]));
             $this->assertEquals($neighborIds, $neighbors[$regionId]);
         }
