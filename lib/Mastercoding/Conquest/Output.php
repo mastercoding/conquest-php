@@ -9,8 +9,9 @@ class Output
      * Output a move to standard out
      *
      * @param \Mastercoding\Conquest\Move\MoveInterface $move
+     * @parram $outputHandle
      */
-    public static function move(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\MoveInterface $move)
+    public static function move(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\MoveInterface $move, $outputHandle)
     {
 
         // get you
@@ -23,7 +24,7 @@ class Output
         $move = str_replace('{{you}}', $you->getName(), $move);
 
         // write to standard out, append newline
-        fwrite(STDOUT, $move . "\n");
+        fwrite($outputHandle, $move . "\n");
 
     }
 

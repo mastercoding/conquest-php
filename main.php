@@ -4,24 +4,13 @@
 // the autoloader
 require_once ('vendor/autoload.php');
 
-// setup parser
-$commandParser = new Mastercoding\Conquest\Command\Parser\Parser();
-
 // bot
-$bot = new \Mastercoding\Conquest\Bot\SimpleBot();
+$bot = new \Mastercoding\Conquest\Bot\StrategicBot();
 
-// loop
-while ($line = trim(fgets(STDIN))) {
+// set strategies for this bot
+$bot->setRegionPickerStrategy(new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Random());
+$bot->setAttackTransferStrategy(new \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\NoMoves());
+$bot->setArmyPlacementStrategy(new \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\AllOnOne());
 
-    // parse command
-    $command = $commandParser->parse($line);
-    $move = $bot->processCommand($command);
-
-    if (null !== $move) {
-
-        // output moves
-        \Mastercoding\Conquest\Output::move($bot, $move);
-
-    }
-
-}
+// run
+$bot->run(STDIN, STDOUT);

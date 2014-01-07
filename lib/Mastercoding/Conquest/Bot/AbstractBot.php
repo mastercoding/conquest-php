@@ -97,4 +97,34 @@ abstract class AbstractBot implements BotInterface
 
     }
 
+    /**
+     * Run this bot, input from input handle, output to output handle
+     *
+     * @param $inputHandle
+     * @param $outputHandle
+     */
+    public function run($inputHandle, $outputHandle)
+    {
+
+        // setup parser
+        $commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
+
+        // loop
+        while ($line = trim(fgets($inputHandle))) {
+
+            // parse command
+            $command = $commandParser->parse($line);
+            $move = $this->processCommand($command);
+
+            if (null !== $move) {
+
+                // output moves
+                \Mastercoding\Conquest\Output::move($this, $move, $outputHandle);
+
+            }
+
+        }
+
+    }
+
 }

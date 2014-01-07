@@ -5,7 +5,8 @@ namespace Mastercoding\Conquest\Move;
 class PickRandomRegions extends AbstractMove
 {
     /**
-     * Random regions are picked if non valid response is returned
+     * Random regions are picked if non valid response is returned. Invalid
+     * response means pick anything. Nice place for a joke.
      */
     public function toString()
     {
