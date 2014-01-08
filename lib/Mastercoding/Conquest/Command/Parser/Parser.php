@@ -6,10 +6,7 @@ class Parser implements ParserInterface
 {
 
     /**
-     * Parse the line into an input command
-     *
-     * @param string $line
-     * @return \Mastercoding\Conquest\Command\Input
+     * @inheritDoc
      */
     public function parse($line)
     {
@@ -32,6 +29,8 @@ class Parser implements ParserInterface
                 return \Mastercoding\Conquest\Command\StartingRegions\Pick::create($components);
             case 'update_map':
                 return \Mastercoding\Conquest\Command\UpdateMap\Update::create($components);
+            case 'opponent_moves':
+                return \Mastercoding\Conquest\Command\OpponentMoves\Moves::create($components);
         }
 
         return null;

@@ -21,9 +21,36 @@ class Moves extends \Mastercoding\Conquest\Command\AbstractCommand implements \M
         // set timeout
         $moves = new self();
 
-        // the updates
-        $actualMoves = array();
+        // no moves?
+        if (count($components) == 1) {
+            return $moves;
+        }
 
+        for ($i = 1; $i < count($components); ) {
+
+            switch ( $components[$i+1] ) {
+
+                case 'place_armies':
+                    $placeArmiesMove = new \Mastercoding\Conquest\Move\PlaceArmies;
+                    $placeArmiesMove->setPlayerName($components[$i]);
+                    $placeArmiesMove->addPlaceArmies($components[$i + 2], $components[$i + 3]);
+                    $moves->addMove($placeArmiesMove);
+                    $i += 4;
+                    break;
+                case 'attack/transfer':
+                    $attackTransferMove = new \Mastercoding\Conquest\Move\AttackTransfer;
+                    $attackTransferMove->setPlayerName($components[$i]);
+                    $attackTransferMove->addAttackTransfer($components[$i + 2], $components[$i + 3], $components[$i + 4]);
+                    $moves->addMove($attackTransferMove);
+                    $i += 5;
+                    break;
+                default:
+                    throw new \Mastercoding\Conquest\Command\Parser\GenericException('Invalid opponent moves');
+            }
+
+        }
+
+        return $moves;
 
     }
 
@@ -32,28 +59,28 @@ class Moves extends \Mastercoding\Conquest\Command\AbstractCommand implements \M
      */
     public function __construct()
     {
-        $this->updates = array();
+        $this->moves = new \SplObjectStorage;
     }
 
     /**
-     * Set region ids
+     * Add move
      *
-     * @param Array $regionIds
+     * @param \Mastercoding\Conquest\Move\AbstractMove $move
      */
-    public function setUpdates($updates)
+    public function addMove(\Mastercoding\Conquest\Move\AbstractMove $move)
     {
-        $this->updates = $updates;
+        $this->moves->attach($move);
         return $this;
     }
 
     /**
-     * Get updates ids
+     * Get moves
      *
-     * @return Array
+     * @return \SplObjectStorage
      */
-    public function getUpdates()
+    public function getMoves()
     {
-        return $this->updates;
+        return $this->moves;
     }
 
 }

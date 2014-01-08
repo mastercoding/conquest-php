@@ -15,12 +15,12 @@ class PlaceArmies extends AbstractMove
      *
      * Add place armies
      *
-     * @param \Mastercoding\Conquest\Object\Region $region
+     * @param int $regionId
      * @param int $armies
      */
-    public function addPlaceArmies(\Mastercoding\Conquest\Object\Region $region, $armies)
+    public function addPlaceArmies($regionId, $armies)
     {
-        $this->regions[$region->getId()] = $armies;
+        $this->regions[$regionId] = $armies;
         return $this;
     }
 

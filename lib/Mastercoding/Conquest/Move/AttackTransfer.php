@@ -15,13 +15,13 @@ class AttackTransfer extends AbstractMove
      *
      * Add attack/transfer
      *
-     * @param \Mastercoding\Conquest\Object\Region $regionFrom
-     * @param \Mastercoding\Conquest\Object\Region $regionTo
+     * @param int $regionFromId
+     * @param int $regionToId
      * @param int $armies
      */
-    public function addAttackTransfer(\Mastercoding\Conquest\Object\Region $regionFrom, \Mastercoding\Conquest\Object\Region $regionTo, $armies)
+    public function addAttackTransfer($regionFromId, $regionToId, $armies)
     {
-        $this->attacks[] = array('regionFromId' => $regionFrom->getId(), 'regionToId' => $regionTo->getId(), 'armies' => $armies);
+        $this->attacks[] = array('regionFromId' => $regionFromId, 'regionToId' => $regionToId, 'armies' => $armies);
         return $this;
     }
 

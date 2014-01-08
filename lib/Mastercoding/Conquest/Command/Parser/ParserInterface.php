@@ -9,6 +9,7 @@ interface ParserInterface
      *
      * @param string $line
      * @return \Mastercoding\Conquest\Command\Input
+     * @throws Exception
      */
     public function parse($line);
 

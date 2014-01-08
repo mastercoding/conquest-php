@@ -1,2 +1,5 @@
 Command Parser:
 - opponent moves parser
+
+Unit tests:
+- Strategies

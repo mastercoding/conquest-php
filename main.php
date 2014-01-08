@@ -8,7 +8,7 @@ require_once ('vendor/autoload.php');
 $bot = new \Mastercoding\Conquest\Bot\StrategicBot();
 
 // set strategies for this bot
-$bot->setRegionPickerStrategy(new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Random());
+$bot->setRegionPickerStrategy(new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Spread());
 $bot->setAttackTransferStrategy(new \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\NoMoves());
 $bot->setArmyPlacementStrategy(new \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\AllOnOne());
 

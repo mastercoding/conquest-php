@@ -92,7 +92,7 @@ class SimpleBotTest extends \PHPUnit_Framework_TestCase
     {
 
         // line in
-        $line = 'opponent_moves blabla';
+        $line = 'opponent_moves player2 place_armies 40 2 player2 place_armies 40 1 player2 place_armies 11 1 player2 place_armies 11 1 player2 attack/transfer 40 42 10';
 
         // parse command
         $command = $this->commandParser->parse($line);

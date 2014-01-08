@@ -23,7 +23,7 @@ class AllOnOne implements ArmyPlacementInterface
 
         // moves
         $placeArmiesMove = new \Mastercoding\Conquest\Move\PlaceArmies;
-        $placeArmiesMove->addPlaceArmies($first, $amount);
+        $placeArmiesMove->addPlaceArmies($first->getId(), $amount);
         return $placeArmiesMove;
 
     }
