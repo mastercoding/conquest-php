@@ -38,11 +38,11 @@ class Spread implements RegionPickerInterface
     /**
      * @inheritDoc
      */
-    public function pickRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Command\StartingRegions\Pick $pickCommand)
+    public function pickRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\PickRegions $move, $amountLeft, \Mastercoding\Conquest\Command\StartingRegions\Pick $pickCommand)
     {
 
         // possible regions
-        $regionIds = $pickCommand->getRegionIds();
+        $regionIds = array_diff($pickCommand->getRegionIds(), $move->getRegionIds());
 
         // map region ids by continent
         $mappedRegions = array();
@@ -67,15 +67,18 @@ class Spread implements RegionPickerInterface
         }
 
         // add additional
-        $amountToPick = 6 - count($chosenRegions);
+        $amountToPick = $amountLeft - count($chosenRegions);
         if ($amountToPick > 0) {
             $chosenRegions = array_merge($chosenRegions, $this->pickAdditionalRegions($chosenRegions, $regionIds, $amountToPick));
         }
 
         // return as command
-        $pickRegionsMove = new \Mastercoding\Conquest\Move\PickRegions();
-        $pickRegionsMove->setRegionIds($chosenRegions);
-        return $pickRegionsMove;
+        for ($i = 0; $i < $amountLeft; $i++) {
+            $move->addRegionId($chosenRegions[$i]);
+        }
+
+        // ok
+        return array($move, 0);
 
     }
 

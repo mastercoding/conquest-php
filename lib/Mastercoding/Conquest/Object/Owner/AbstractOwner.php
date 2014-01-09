@@ -6,6 +6,20 @@ abstract class AbstractOwner extends \Mastercoding\Conquest\Object\AbstractObjec
 {
 
     /**
+     * Neutral type
+     *
+     * @var string
+     */
+    const NEUTRAL = 'neutral';
+
+    /**
+     * Unknown type
+     *
+     * @var string
+     */
+    const UNKNOWN = 'unknown';
+
+    /**
      * Name of the bot
      *
      * @var int

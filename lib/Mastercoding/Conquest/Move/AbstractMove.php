@@ -33,4 +33,15 @@ abstract class AbstractMove implements MoveInterface
         return $this->playerName;
     }
 
+    /**
+     * Expand (replace) {{player_name}} with actual player name
+     *
+     * @param string $string
+     * @return string
+     */
+    public function expandPlayerName($string)
+    {
+        return str_replace('{{player_name}}', $this->getPlayerName(), $string);
+    }
+
 }

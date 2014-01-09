@@ -1,5 +1,5 @@
-Command Parser:
-- opponent moves parser
+Opponent moves:
+- update into map with mapupdater
 
 Unit tests:
 - Strategies

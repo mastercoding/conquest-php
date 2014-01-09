@@ -13,11 +13,22 @@ abstract class AbstractBot implements BotInterface
     private $map;
 
     /**
-     * Construct the bot
+     * The event dispatcher
+     *
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
-    public function __construct()
+    private $eventDispatcher;
+
+    /**
+     * Construct the bot
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+     */
+    public function __construct($map, $eventDispatcher)
     {
-        $this->map = new \Mastercoding\Conquest\Object\Map;
+        $this->map = $map;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -39,6 +50,16 @@ abstract class AbstractBot implements BotInterface
     public function getMap()
     {
         return $this->map;
+    }
+
+    /**
+     * Get the event dispatcher
+     *
+     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
     }
 
     /**
@@ -76,13 +97,22 @@ abstract class AbstractBot implements BotInterface
                 break;
 
             case 'SetupMap\Neighbors':
+
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::BEFORE_SETUP_NEIGHBORS);
+
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->setupNeighbors($this->getMap(), $command);
+
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_SETUP_NEIGHBORS);
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::SETUP_MAP_COMPLETE);
                 break;
 
             case 'UpdateMap\Update':
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateMap($this->getMap(), $command);
+
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP);
+
                 break;
 
             case 'StartingRegions\Pick':

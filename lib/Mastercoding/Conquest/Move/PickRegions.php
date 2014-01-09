@@ -11,7 +11,12 @@ class PickRegions extends AbstractMove
      * @var Array
      */
     private $regionIds;
-
+    
+    public function __construct()
+    {
+        $this->regionIds = array();   
+    }
+    
     /**
      * Set region ids
      *
@@ -20,6 +25,17 @@ class PickRegions extends AbstractMove
     public function setRegionIds(Array $regionIds)
     {
         $this->regionIds = $regionIds;
+        return $this;
+    }
+    
+    /**
+     * Add region id
+     *
+     * @param int $regionId
+     */
+    public function addRegionId($regionId)
+    {
+        $this->regionIds[] = $regionId;
         return $this;
     }
 

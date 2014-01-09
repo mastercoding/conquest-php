@@ -33,10 +33,12 @@ class AttackTransfer extends AbstractMove
 
         $regions = array();
         foreach ($this->attacks as $attack) {
-            $regions[] = sprintf('{{you}} attack/transfer %d %d %d', (int)$attack['regionFromId'], (int)$attack['regionToId'], (int)$attack['armies']);
+            $regions[] = sprintf('{{player_name}} attack/transfer %d %d %d', (int)$attack['regionFromId'], (int)$attack['regionToId'], (int)$attack['armies']);
         }
+        
+        $string = implode(',', $regions);
+        return $this->expandPlayerName($string);
 
-        return implode(',', $regions);
     }
 
 }

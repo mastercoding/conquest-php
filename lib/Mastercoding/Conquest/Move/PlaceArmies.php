@@ -9,7 +9,7 @@ class PlaceArmies extends AbstractMove
      *
      * @var Array (id => amount)
      */
-    private $regions;
+    private $regions = array();
 
     /**
      *
@@ -33,11 +33,13 @@ class PlaceArmies extends AbstractMove
         $regions = array();
         foreach ($this->regions as $regionId => $armies) {
 
-            $regions[] = sprintf('{{you}} place_armies %d %d', (int)$regionId, (int)$armies);
+            $regions[] = sprintf('{{player_name}} place_armies %d %d', (int)$regionId, (int)$armies);
 
         }
 
-        return implode(',', $regions);
+        $string = implode(',', $regions);
+        return $this->expandPlayerName($string);
+
     }
 
 }

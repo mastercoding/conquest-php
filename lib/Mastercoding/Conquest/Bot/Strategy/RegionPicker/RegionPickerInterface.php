@@ -9,10 +9,11 @@ interface RegionPickerInterface
      * Pick the starting regions for the map from some possible regions
      *
      * @param \Mastercoding\Conquest\Bot\AbstractBot $bot
+     * @param \Mastercoding\Conquest\Move\PickRegions $move
+     * @param int $amountLeft
      * @param \Mastercoding\Conquest\Command\StartingRegions\Pick $pickCommand
-     * @return
-     * \Mastercoding\Conquest\Move\PickRegions|\Mastercoding\Conquest\Move\PickRandomRegions
+     * @return array(\Mastercoding\Conquest\Move\PickRegions|\Mastercoding\Conquest\Move\PickRandomRegions, 0)
      */
-    public function pickRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Command\StartingRegions\Pick $pickCommand);
+    public function pickRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\PickRegions $move, $amountLeft, \Mastercoding\Conquest\Command\StartingRegions\Pick $pickCommand);
 
 }

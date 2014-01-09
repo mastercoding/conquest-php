@@ -18,7 +18,9 @@ class SimpleBotTest extends \PHPUnit_Framework_TestCase
     {
 
         // bot
-        $bot = new \Mastercoding\Conquest\Bot\SimpleBot;
+        $map = new \Mastercoding\Conquest\Object\Map();
+        $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+        $bot = new \Mastercoding\Conquest\Bot\SimpleBot($map, $eventDispatcher);
 
         // read setup commands
         $setupCommands = file(dirname(__FILE__) . '/setup.txt');

@@ -8,11 +8,8 @@ class AllOnOne implements ArmyPlacementInterface
     /**
      * @inheritDoc
      */
-    public function placeArmies(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand)
+    public function placeArmies(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\PlaceArmies $move, $amountLeft, \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand)
     {
-
-        // get amount to place
-        $amount = $bot->getMap()->getStartingArmies();
 
         // place on any of my regions
         $myRegions = $bot->getMap()->getRegionsForPlayer($bot->getMap()->getYou());
@@ -22,9 +19,8 @@ class AllOnOne implements ArmyPlacementInterface
         $first = $myRegions->current();
 
         // moves
-        $placeArmiesMove = new \Mastercoding\Conquest\Move\PlaceArmies;
-        $placeArmiesMove->addPlaceArmies($first->getId(), $amount);
-        return $placeArmiesMove;
+        $move->addPlaceArmies($first->getId(), $amountLeft);
+        return array($move, 0);
 
     }
 

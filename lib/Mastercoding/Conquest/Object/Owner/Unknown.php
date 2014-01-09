@@ -7,7 +7,7 @@ class Unknown extends AbstractOwner
 
     public function __construct()
     {
-        parent::__construct('unknown');
+        parent::__construct(AbstractOwner::UNKNOWN);
     }
 
 }

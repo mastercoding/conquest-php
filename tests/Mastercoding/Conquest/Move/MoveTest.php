@@ -7,11 +7,12 @@ class MoveTest extends \PHPUnit_Framework_TestCase
     {
 
         $move = new \Mastercoding\Conquest\Move\PlaceArmies;
-        $move->addPlaceArmies(new \Mastercoding\Conquest\Object\Region(1, 1), 5);
-        $move->addPlaceArmies(new \Mastercoding\Conquest\Object\Region(3, 1), 2);
+        $move->setPlayerName('test');
+        $move->addPlaceArmies(1, 5);
+        $move->addPlaceArmies(3, 2);
 
         // output
-        $this->assertEquals('{{you}} place_armies 1 5,{{you}} place_armies 3 2', $move->toString());
+        $this->assertEquals('test place_armies 1 5,test place_armies 3 2', $move->toString());
 
     }
 
@@ -19,11 +20,12 @@ class MoveTest extends \PHPUnit_Framework_TestCase
     {
 
         $move = new \Mastercoding\Conquest\Move\AttackTransfer;
-        $move->addAttackTransfer(new \Mastercoding\Conquest\Object\Region(1, 1), new \Mastercoding\Conquest\Object\Region(3, 1), 3);
-        $move->addAttackTransfer(new \Mastercoding\Conquest\Object\Region(1, 1), new \Mastercoding\Conquest\Object\Region(4, 1), 2);
+        $move->setPlayerName('test');
+        $move->addAttackTransfer(1, 3, 3);
+        $move->addAttackTransfer(1, 4, 2);
 
         // output
-        $this->assertEquals('{{you}} attack/transfer 1 3 3,{{you}} attack/transfer 1 4 2', $move->toString());
+        $this->assertEquals('test attack/transfer 1 3 3,test attack/transfer 1 4 2', $move->toString());
 
     }
 

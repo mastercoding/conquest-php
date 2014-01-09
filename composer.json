@@ -1,11 +1,14 @@
 {
   "require-dev": {
+
+    "symfony/event-dispatcher": "dev-master",
     "phpunit/phpunit": "3.7.*"
   },
 
   "autoload": {
     "psr-0": {
-      "Mastercoding\\Conquest\\": "lib/"
+      "Mastercoding\\": "lib/",
+      "Helpless\\": "lib/"
     }
   }
 }

@@ -6,7 +6,7 @@ class Neutral extends AbstractOwner
 {
     public function __construct()
     {
-        parent::__construct('neutral');
+        parent::__construct(AbstractOwner::NEUTRAL);
     }
 
 }

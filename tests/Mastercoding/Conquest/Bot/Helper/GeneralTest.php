@@ -6,8 +6,13 @@ class GeneralTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
+
+       // bot
+        $map = new \Mastercoding\Conquest\Object\Map();
+        $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+        $bot = new \Mastercoding\Conquest\Bot\SimpleBot($map, $eventDispatcher);
+
         $commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
-        $bot = new \Mastercoding\Conquest\Bot\SimpleBot;
         $setupCommands = file(dirname(__FILE__) . '/../setup.txt');
 
         // process

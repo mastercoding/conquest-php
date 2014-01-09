@@ -9,10 +9,11 @@ interface ArmyPlacementInterface
      * Place armies
      *
      * @param \Mastercoding\Conquest\Bot\AbstractBot $bot
+     * @param int $amountLeft
      * @param \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand
-     * @return
-     * \Mastercoding\Conquest\Move\PlaceArmies
+     * @return array(\Mastercoding\Conquest\Move\PlaceArmies, $amountLeft)
+     * 
      */
-    public function placeArmies(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand);
+    public function placeArmies(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\PlaceArmies $move, $amountLeft, \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand);
 
 }
