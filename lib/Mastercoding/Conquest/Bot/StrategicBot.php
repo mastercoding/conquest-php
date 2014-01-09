@@ -83,7 +83,8 @@ class StrategicBot extends AbstractBot
      */
     public function addRegionPickerStrategy(\Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface $regionPickerStrategy, $priority = 0)
     {
-        $this->regionPickerStrategies->insert($regionPickerStrategy, $priority);
+        $this->regionPickerStrategies[$priority][] = $regionPickerStrategy;
+        sort($this->regionPickerStrategies);
         return $this;
     }
 
@@ -96,7 +97,8 @@ class StrategicBot extends AbstractBot
      */
     public function addArmyPlacementStrategy(\Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface $armyPlacementStrategy, $priority = 0)
     {
-        $this->armyPlacementStrategies->insert($armyPlacementStrategy, $priority);
+        $this->armyPlacementStrategies[$priority][] = $armyPlacementStrategy;
+        sort($this->armyPlacementStrategies);
         return $this;
     }
 
@@ -109,7 +111,8 @@ class StrategicBot extends AbstractBot
      */
     public function addAttackTransferStrategy(\Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface $attackTransferStrategy, $priority = 0)
     {
-        $this->attackTransferStrategies->insert($attackTransferStrategy, $priority);
+        $this->attackTransferStrategies[$priority][] = $attackTransferStrategy;
+        sort($this->attackTransferStrategies);
         return $this;
     }
 
@@ -127,10 +130,12 @@ class StrategicBot extends AbstractBot
         $response = array($move, 6);
 
         // only one region picker can pick
-        foreach ($this->regionPickerStrategies as $strategy) {
-            $response = $strategy->pickRegions($this, $response[0], $response[1], $pickCommand);
-            if ($response[1] == 0) {
-                break;
+        foreach ($this->regionPickerStrategies as $priority => $strategies) {
+            foreach ($strategies as $strategy) {
+                $response = $strategy->pickRegions($this, $response[0], $response[1], $pickCommand);
+                if ($response[1] == 0) {
+                    break;
+                }
             }
         }
 
@@ -156,10 +161,12 @@ class StrategicBot extends AbstractBot
         $response = array($move, $armiesToPlace);
 
         // only one region picker can pick
-        foreach ($this->armyPlacementStrategies as $strategy) {
-            $response = $strategy->placeArmies($this, $response[0], $response[1], $placeArmiesCommand);
-            if ($response[1] == 0) {
-                break;
+        foreach ($this->armyPlacementStrategies as $priority => $strategies) {
+            foreach ($strategies as $strategy) {
+                $response = $strategy->placeArmies($this, $response[0], $response[1], $placeArmiesCommand);
+                if ($response[1] == 0) {
+                    break;
+                }
             }
         }
 
@@ -179,8 +186,10 @@ class StrategicBot extends AbstractBot
         $move->setPlayerName($this->getMap()->getYou()->getName());
 
         // only one region picker can pick
-        foreach ($this->regionPickerStrategies as $strategy) {
-            $move = $strategy->placeArmies($this, $move, $placeArmiesCommand);
+        foreach ($this->regionPickerStrategies as $priority => $strategies) {
+            foreach ($strategies as $strategy) {
+                $move = $strategy->placeArmies($this, $move, $placeArmiesCommand);
+            }
         }
 
         // return move
