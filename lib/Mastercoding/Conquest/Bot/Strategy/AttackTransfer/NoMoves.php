@@ -2,7 +2,7 @@
 
 namespace Mastercoding\Conquest\Bot\Strategy\AttackTransfer;
 
-class NoMoves implements AttackTransferInterface
+class NoMoves extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements AttackTransferInterface
 {
 
     /**

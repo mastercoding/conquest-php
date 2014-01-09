@@ -2,7 +2,7 @@
 
 namespace Mastercoding\Conquest\Bot\Strategy\RegionPicker;
 
-class Random implements RegionPickerInterface
+class Random extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements RegionPickerInterface
 {
 
     /**

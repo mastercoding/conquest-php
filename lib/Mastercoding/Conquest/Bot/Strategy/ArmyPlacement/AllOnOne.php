@@ -2,7 +2,7 @@
 
 namespace Mastercoding\Conquest\Bot\Strategy\ArmyPlacement;
 
-class AllOnOne implements ArmyPlacementInterface
+class AllOnOne extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements ArmyPlacementInterface
 {
 
     /**

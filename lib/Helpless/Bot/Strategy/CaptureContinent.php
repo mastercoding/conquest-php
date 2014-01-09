@@ -2,7 +2,7 @@
 
 namespace Helpless\Bot\Strategy;
 
-class CaptureContinent implements \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface, \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface, \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface
+class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface, \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface, \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface
 {
     /**
      * The continent to caputre
@@ -42,10 +42,10 @@ class CaptureContinent implements \Mastercoding\Conquest\Bot\Strategy\RegionPick
                 if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
 
                     // priority
-                    if ($neighbor->getOwner() == AbstractOwner::NEUTRAL || $neighbor->getOwner() == AbstractOwner::UNKNOWN) {
-                        $priorityQueue->insert($neighbor, 1);
+                    if ($neighbor->getOwner()->getName() == \Mastercoding\Conquest\Object\Owner\AbstractOwner::NEUTRAL || $neighbor->getOwner()->getName() == \Mastercoding\Conquest\Object\Owner\AbstractOwner::UNKNOWN) {
+                        $priorityQueue->insert($region, $region->getArmies());
                     } else {
-                        $priorityQueue->insert($neighbor, 2);
+                        $priorityQueue->insert($region, 999 + $region->getArmies());
                     }
 
                 }
@@ -105,6 +105,9 @@ class CaptureContinent implements \Mastercoding\Conquest\Bot\Strategy\RegionPick
     {
 
         // transfer armies from region with all me neighbours
+        // too closest region with not all me neighbours, or to closest
+        // continent-link neighbour
+        return $move;
 
     }
 

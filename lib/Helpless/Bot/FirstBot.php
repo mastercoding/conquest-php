@@ -5,6 +5,20 @@ class FirstBot extends \Mastercoding\Conquest\Bot\StrategicBot
 {
 
     /**
+     * Capture australia strategy
+     *
+     * @var \Helpless\Bot\Strategy\CaptureContinent
+     */
+    private $captureAustralia;
+
+    /**
+     * Capture south america strategy
+     *
+     * @var \Helpless\Bot\Strategy\CaptureContinent
+     */
+    private $captureSouthAmerica;
+
+    /**
      * Setup listeners
      */
     public function __construct($map, $eventDispatcher)
@@ -16,12 +30,10 @@ class FirstBot extends \Mastercoding\Conquest\Bot\StrategicBot
         $eventDispatcher->addListener(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP, array($this, 'mapUpdate'));
 
     }
-    
+
     private function reorderContinentCapture()
     {
-        
-        
-        
+
     }
 
     /**
@@ -29,8 +41,9 @@ class FirstBot extends \Mastercoding\Conquest\Bot\StrategicBot
      */
     public function mapUpdate()
     {
-        
-        $this->reorderContinentCapture();        
+
+        // going for continent with the most regions captured first
+        $australia = \Mastercoding\Conquest\Bot\Helper\Risk::getNamedContinent($this->getMap(), 'Australia');
 
     }
 
@@ -42,22 +55,24 @@ class FirstBot extends \Mastercoding\Conquest\Bot\StrategicBot
 
         // conquer australia, conquer south america
         $australia = \Mastercoding\Conquest\Bot\Helper\Risk::getNamedContinent($this->getMap(), 'Australia');
-        $captureAustralia = new \Helpless\Bot\Strategy\CaptureContinent();
-        $captureAustralia->setContinent($australia);
+        $this->captureAustralia = new \Helpless\Bot\Strategy\CaptureContinent();
+        $this->captureAustralia->setPriority(2);
+        $this->captureAustralia->setContinent($australia);
 
         // conquer australia, conquer south america
         $southAmerica = \Mastercoding\Conquest\Bot\Helper\Risk::getNamedContinent($this->getMap(), 'South America');
-        $captureSouthAmerica = new \Helpless\Bot\Strategy\CaptureContinent();
-        $captureSouthAmerica->setContinent($southAmerica);
+        $this->captureSouthAmerica = new \Helpless\Bot\Strategy\CaptureContinent();
+        $this->captureSouthAmerica->setPriority(1);
+        $this->captureSouthAmerica->setContinent($southAmerica);
 
         // register
-        $this->addStrategy($captureAustralia, 2);
-        $this->addStrategy($captureSouthAmerica, 1);
+        $this->addStrategy($this->captureAustralia);
+        $this->addStrategy($this->captureSouthAmerica);
 
         // pick regions, spread
-        $this->addRegionPickerStrategy(new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Spread());
+        $spread = new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Spread();
+        $this->addRegionPickerStrategy($spread);
 
     }
-    
 
 }

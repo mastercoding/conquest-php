@@ -5,7 +5,7 @@ namespace Mastercoding\Conquest\Bot\Strategy\RegionPicker;
 /**
  * Pick regions on as many different continents as possible
  */
-class Spread implements RegionPickerInterface
+class Spread extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements RegionPickerInterface
 {
 
     /**

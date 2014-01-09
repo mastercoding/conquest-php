@@ -55,7 +55,9 @@ class StrategicBot extends AbstractBot
      */
     public function removeStrategy($strategy)
     {
-        die('todo');
+        $this->removeRegionPickerStrategy($strategy);
+        $this->removeArmyPlacementStrategy($strategy);
+        $this->removeAttackTransferStrategy($strategy);
         return $this;
     }
 
@@ -65,11 +67,31 @@ class StrategicBot extends AbstractBot
      *
      * @param $strategy
      */
-    public function addStrategy($strategy, $priority = 0)
+    public function addStrategy($strategy)
     {
-        $this->addRegionPickerStrategy($strategy, $priority);
-        $this->addArmyPlacementStrategy($strategy, $priority);
-        $this->addAttackTransferStrategy($strategy, $priority);
+        $this->addRegionPickerStrategy($strategy);
+        $this->addArmyPlacementStrategy($strategy);
+        $this->addAttackTransferStrategy($strategy);
+        return $this;
+    }
+
+    /**
+     * Remove the region picker strategy
+     *
+     * @var
+     * \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface
+     * $regionPickerStrategy
+     */
+    public function removeRegionPickerStrategy(\Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface $regionPickerStrategy)
+    {
+        for ($i = 0; $i < count($this->regionPickerStrategies); $i++) {
+
+            if ($this->regionPickerStrategies[$i] == $regionPickerStrategy) {
+                unset($this->regionPickerStrategies[$i]);
+            }
+
+        }
+        $this->sortStrategies($this->regionPickerStrategies);
         return $this;
     }
 
@@ -79,12 +101,31 @@ class StrategicBot extends AbstractBot
      * @var
      * \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface
      * $regionPickerStrategy
-     * @var int $priority
      */
-    public function addRegionPickerStrategy(\Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface $regionPickerStrategy, $priority = 0)
+    public function addRegionPickerStrategy(\Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface $regionPickerStrategy)
     {
-        $this->regionPickerStrategies[$priority][] = $regionPickerStrategy;
-        sort($this->regionPickerStrategies);
+        $this->regionPickerStrategies[] = $regionPickerStrategy;
+        $this->sortStrategies($this->regionPickerStrategies);
+        return $this;
+    }
+
+    /**
+     * Remove the region picker strategy
+     *
+     * @var
+     * \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface
+     * $armyPlacementStrategy
+     */
+    public function removeArmyPlacementStrategy(\Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface $armyPlacementStrategy)
+    {
+        for ($i = 0; $i < count($this->armyPlacementStrategies); $i++) {
+
+            if ($this->armyPlacementStrategies[$i] == $armyPlacementStrategy) {
+                unset($this->armyPlacementStrategies[$i]);
+            }
+
+        }
+        $this->sortStrategies($this->armyPlacementStrategies);
         return $this;
     }
 
@@ -95,10 +136,30 @@ class StrategicBot extends AbstractBot
      * $armyPlacementStrategy
      * @var int $priority
      */
-    public function addArmyPlacementStrategy(\Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface $armyPlacementStrategy, $priority = 0)
+    public function addArmyPlacementStrategy(\Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface $armyPlacementStrategy)
     {
-        $this->armyPlacementStrategies[$priority][] = $armyPlacementStrategy;
-        sort($this->armyPlacementStrategies);
+        $this->armyPlacementStrategies[] = $armyPlacementStrategy;
+        $this->sortStrategies($this->armyPlacementStrategies);
+        return $this;
+    }
+
+    /**
+     * Remove attack transfer
+     *
+     * @var
+     * \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface
+     * $attackTransferStrategy
+     */
+    public function removeAttackTransferStrategy(\Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface $attackTransferStrategy)
+    {
+        for ($i = 0; $i < count($this->armyPlacementStrategies); $i++) {
+
+            if ($this->attackTransferStrategies[$i] == $attackTransferStrategy) {
+                unset($this->attackTransferStrategies[$i]);
+            }
+
+        }
+        $this->sortStrategies($this->attackTransferStrategies);
         return $this;
     }
 
@@ -111,9 +172,40 @@ class StrategicBot extends AbstractBot
      */
     public function addAttackTransferStrategy(\Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface $attackTransferStrategy, $priority = 0)
     {
-        $this->attackTransferStrategies[$priority][] = $attackTransferStrategy;
-        sort($this->attackTransferStrategies);
+        $this->attackTransferStrategies[] = $attackTransferStrategy;
+        $this->sortStrategies($this->attackTransferStrategies);
         return $this;
+    }
+
+    /**
+     * Bot should be notified if strategies priority are changed
+     */
+    public function strategiesChanged()
+    {
+        $this->sortStrategies($this->attackTransferStrategies);
+        $this->sortStrategies($this->armyPlacementStrategies);
+        $this->sortStrategies($this->regionPickerStrategies);
+    }
+
+    /**
+     * Sort strategies by priority
+     *
+     * @param Array $strategies
+     */
+    private function sortStrategies(Array &$strategies)
+    {
+
+        usort($strategies, function($a, $b)
+        {
+            if ($a->getPriority() < $b->getPriority()) {
+                return 1;
+            } else if ($a->getPriority() > $b->getPriority()) {
+                return -1;
+            }
+            return 0;
+
+        });
+
     }
 
     /**
@@ -130,12 +222,10 @@ class StrategicBot extends AbstractBot
         $response = array($move, 6);
 
         // only one region picker can pick
-        foreach ($this->regionPickerStrategies as $priority => $strategies) {
-            foreach ($strategies as $strategy) {
-                $response = $strategy->pickRegions($this, $response[0], $response[1], $pickCommand);
-                if ($response[1] == 0) {
-                    break;
-                }
+        foreach ($this->regionPickerStrategies as $strategy) {
+            $response = $strategy->pickRegions($this, $response[0], $response[1], $pickCommand);
+            if ($response[1] == 0) {
+                break;
             }
         }
 
@@ -154,19 +244,17 @@ class StrategicBot extends AbstractBot
         $armiesToPlace = $this->getMap()->getStartingArmies();
 
         // move, move and amount left
-        $move = new \Mastercoding\Conquest\Move\AttackTransfer;
+        $move = new \Mastercoding\Conquest\Move\PlaceArmies;
         $move->setPlayerName($this->getMap()->getYou()->getName());
 
         // the response
         $response = array($move, $armiesToPlace);
 
         // only one region picker can pick
-        foreach ($this->armyPlacementStrategies as $priority => $strategies) {
-            foreach ($strategies as $strategy) {
-                $response = $strategy->placeArmies($this, $response[0], $response[1], $placeArmiesCommand);
-                if ($response[1] == 0) {
-                    break;
-                }
+        foreach ($this->armyPlacementStrategies as $strategy) {
+            $response = $strategy->placeArmies($this, $response[0], $response[1], $placeArmiesCommand);
+            if ($response[1] == 0) {
+                break;
             }
         }
 
@@ -186,9 +274,14 @@ class StrategicBot extends AbstractBot
         $move->setPlayerName($this->getMap()->getYou()->getName());
 
         // only one region picker can pick
-        foreach ($this->regionPickerStrategies as $priority => $strategies) {
-            foreach ($strategies as $strategy) {
-                $move = $strategy->placeArmies($this, $move, $placeArmiesCommand);
+        foreach ($this->attackTransferStrategies as $strategy) {
+
+            // move
+            $move = $strategy->attackTransfer($this, $move, $attackTransferCommand);
+
+            // no move
+            if ($move instanceof \Mastercoding\Conquest\Move\NoMove) {
+                break;
             }
         }
 

@@ -9,7 +9,7 @@ class AttackTransfer extends AbstractMove
      *
      * @var Array (regionFromId, regionToId, armies)
      */
-    private $attacks;
+    private $attacks = array();
 
     /**
      *
@@ -30,12 +30,20 @@ class AttackTransfer extends AbstractMove
      */
     public function toString()
     {
+        // no moves?
+        if (empty($this->attacks)) {
+
+            // no
+            $noMoves = new \Mastercoding\Conquest\Move\NoMove;
+            return $noMoves->toString();
+
+        }
 
         $regions = array();
         foreach ($this->attacks as $attack) {
             $regions[] = sprintf('{{player_name}} attack/transfer %d %d %d', (int)$attack['regionFromId'], (int)$attack['regionToId'], (int)$attack['armies']);
         }
-        
+
         $string = implode(',', $regions);
         return $this->expandPlayerName($string);
 

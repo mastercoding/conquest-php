@@ -31,7 +31,7 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
      *
      * @var int
      */
-    private $armies;
+    private $armies = 2;
 
     /**
      * Owner of this region
@@ -113,6 +113,17 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
     public function setArmies($armies)
     {
         $this->armies = $armies;
+        return $this;
+    }
+
+    /**
+     * Add number of armies
+     *
+     * @param int $armies
+     */
+    public function addArmies($armies)
+    {
+        $this->armies += $armies;
         return $this;
     }
 

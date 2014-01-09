@@ -20,9 +20,6 @@ class Output
         // move as string
         $move = $move->toString();
 
-        // replace {{you}} with you
-        $move = str_replace('{{you}}', $you->getName(), $move);
-
         // write to standard out, append newline
         fwrite($outputHandle, $move . "\n");
 
