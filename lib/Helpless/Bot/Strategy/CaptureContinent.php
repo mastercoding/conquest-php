@@ -32,16 +32,16 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
 
         // loop regions to see if any of them have opponent owned neighbors, if
         // so pick this one, otherwise, pick neutral/unknown
+        $priorityQueue = new \SplPriorityQueue;
         foreach ($myRegions as $region) {
 
             // loop neighbors
-            $priorityQueue = new \SplPriorityQueue;
             $notMeNeighborCount = 0;
             foreach ($region->getNeighbors() as $neighbor) {
 
                 // at least not mine
                 if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
-                    $notMeNeighborCount++;
+                    $notMeNeighborCount += 1 * ($neighbor->getContinentId() == $this->continent->getId() ? 10 : 1);
                 }
 
             }
