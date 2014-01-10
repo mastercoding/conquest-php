@@ -97,7 +97,6 @@ abstract class AbstractBot implements BotInterface
                 break;
 
             case 'SetupMap\Neighbors':
-
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::BEFORE_SETUP_NEIGHBORS);
 
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
@@ -119,7 +118,10 @@ abstract class AbstractBot implements BotInterface
                 return $this->pickRegions($command);
 
             case 'Go\PlaceArmies':
-                return $this->placeArmies($command);
+                $placeArmiesMove = $this->placeArmies($command);
+                $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
+                $mapUpdater->updatePlaceArmies($this->getMap(), $placeArmiesMove);
+                return $placeArmiesMove;
 
             case 'Go\AttackTransfer':
                 return $this->attackTransfer($command);

@@ -25,6 +25,16 @@ class PlaceArmies extends AbstractMove
     }
 
     /**
+     * Get place armies
+     *
+     * @return Array
+     */
+    public function getPlaceArmies()
+    {
+        return $this->regions;
+    }
+
+    /**
      * Convert to string
      */
     public function toString()

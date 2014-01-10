@@ -2,37 +2,38 @@
 
 class PathTest extends \PHPUnit_Framework_TestCase
 {
-    private $map;
+    private $commandParser;
+    private $bot;
 
     public function setup()
     {
 
-       // bot
+        // bot
         $map = new \Mastercoding\Conquest\Object\Map();
         $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-        $bot = new \Mastercoding\Conquest\Bot\SimpleBot($map, $eventDispatcher);
+        $this->bot = new \Mastercoding\Conquest\Bot\SimpleBot($map, $eventDispatcher);
 
-        $commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
+        $this->commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
         $setupCommands = file(dirname(__FILE__) . '/../setup.txt');
 
         // process
         foreach ($setupCommands as $line) {
-            $command = $commandParser->parse($line);
-            $bot->processCommand($command);
+            $command = $this->commandParser->parse($line);
+            $this->bot->processCommand($command);
         }
-        $this->map = $bot->getMap();
+
     }
 
     public function testShortestPath()
     {
-        $map = $this->map;
+        $map = $this->bot->getMap();
 
         //start/end
         $startRegion = $map->getRegionById(39);
         $endRegion = $map->getRegionById(42);
 
         // path
-        $path = \Mastercoding\Conquest\Bot\Helper\Path::shortestPath($this->map, $startRegion, $endRegion);
+        $path = \Mastercoding\Conquest\Bot\Helper\Path::shortestPath($map, $startRegion, $endRegion);
         $this->assertCount(3, $path);
         return $path;
 
@@ -40,15 +41,38 @@ class PathTest extends \PHPUnit_Framework_TestCase
 
     public function testShortestPath2()
     {
-        $map = $this->map;
+        $map = $this->bot->getMap();
 
         //start/end
         $startRegion = $map->getRegionById(2);
         $endRegion = $map->getRegionById(42);
 
         // path
-        $path = \Mastercoding\Conquest\Bot\Helper\Path::shortestPath($this->map, $startRegion, $endRegion);
+        $path = \Mastercoding\Conquest\Bot\Helper\Path::shortestPath($map, $startRegion, $endRegion);
         $this->assertCount(9, $path);
+        return $path;
+
+    }
+
+    public function testMyPath()
+    {
+        // process
+        $setupCommands = array('update_map 39 player1 2 40 player1 2 42 player1 2');
+        foreach ($setupCommands as $line) {
+            $command = $this->commandParser->parse($line);
+            $this->bot->processCommand($command);
+        }
+
+        // map
+        $map = $this->bot->getMap();
+
+        //start/end
+        $startRegion = $map->getRegionById(39);
+        $endRegion = $map->getRegionById(42);
+
+        // path
+        $path = \Mastercoding\Conquest\Bot\Helper\Path::shortestPath($map, $startRegion, $endRegion, true);
+        $this->assertCount(3, $path);
         return $path;
 
     }
@@ -59,14 +83,15 @@ class PathTest extends \PHPUnit_Framework_TestCase
     public function testPathYours(Array $path)
     {
         // not yours
-        $this->assertFalse(\Mastercoding\Conquest\Bot\Helper\Path::pathYours($this->map, $path));
+        $map = $this->bot->getMap();
+        $this->assertFalse(\Mastercoding\Conquest\Bot\Helper\Path::pathYours($map, $path));
 
         // yours
         foreach ($path as $region) {
-            $region->setOwner($this->map->getYou());
+            $region->setOwner($map->getYou());
         }
 
-        $this->assertTrue(\Mastercoding\Conquest\Bot\Helper\Path::pathYours($this->map, $path));
+        $this->assertTrue(\Mastercoding\Conquest\Bot\Helper\Path::pathYours($map, $path));
 
     }
 

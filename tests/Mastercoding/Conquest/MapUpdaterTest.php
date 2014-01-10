@@ -156,6 +156,27 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @depends testSetupPlayers
+     */
+    public function testPlaceArmies(\Mastercoding\Conquest\Object\Map $map)
+    {
+
+        // command
+        $move = new \Mastercoding\Conquest\Move\PlaceArmies;
+        $move->setPlayerName('test');
+        $move->addPlaceArmies(1, 5);
+        $move->addPlaceArmies(3, 2);
+
+        // process
+        $this->mapUpdater->updatePlaceArmies($map, $move);
+
+        // validate
+        $this->assertEquals(7, $map->getRegionById(1)->getArmies());
+        $this->assertEquals(4, $map->getRegionById(3)->getArmies());
+
+    }
+
     public function testPlayers()
     {
 

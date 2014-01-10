@@ -13,8 +13,9 @@ class Path
      * @param \Mastercoding\Conquest\Object\map $map
      * @param \Mastercoding\Conquest\Object\Region $startingRegion
      * @param \Mastercoding\Conquest\Object\Region $destinationRegion
+     * @param bool $onlyYours
      */
-    public static function shortestPath(\Mastercoding\Conquest\Object\map $map, \Mastercoding\Conquest\Object\Region $startingRegion, \Mastercoding\Conquest\Object\Region $destinationRegion)
+    public static function shortestPath(\Mastercoding\Conquest\Object\map $map, \Mastercoding\Conquest\Object\Region $startingRegion, \Mastercoding\Conquest\Object\Region $destinationRegion, $onlyYours = false)
     {
 
         // same?
@@ -36,6 +37,11 @@ class Path
         for ($i = 0; $i < count($queue); $i++) {
 
             foreach ($queue[$i]->getNeighbors() as $neighbor) {
+
+                // yours
+                if ($onlyYours && $neighbor->getOwner() != $map->getYou()) {
+                    continue;
+                }
 
                 // mark visited and track path
                 if (!isset($visited[$neighbor->getId()])) {
@@ -75,6 +81,9 @@ class Path
             }
 
         }
+        
+        // no path
+        return null;
 
     }
 

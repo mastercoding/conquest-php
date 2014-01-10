@@ -36,37 +36,35 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
 
             // loop neighbors
             $priorityQueue = new \SplPriorityQueue;
+            $notMeNeighborCount = 0;
             foreach ($region->getNeighbors() as $neighbor) {
 
                 // at least not mine
                 if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
-
-                    // priority
-                    if ($neighbor->getOwner()->getName() == \Mastercoding\Conquest\Object\Owner\AbstractOwner::NEUTRAL || $neighbor->getOwner()->getName() == \Mastercoding\Conquest\Object\Owner\AbstractOwner::UNKNOWN) {
-                        $priorityQueue->insert($region, $region->getArmies());
-                    } else {
-                        $priorityQueue->insert($region, 999 + $region->getArmies());
-                    }
-
+                    $notMeNeighborCount++;
                 }
 
             }
 
-            // get region with top priority
-            $topPriority = $priorityQueue->top();
-            if ($topPriority) {
-
-                // ok, all armies on this one (better implementation to come)
-                $amount = $amountLeft;
-                $move->addPlaceArmies($topPriority->getId(), $amount);
-                return array($move, $amountLeft - $amount);
-
+            if ($notMeNeighborCount > 0) {
+                $priorityQueue->insert($region, $notMeNeighborCount);
             }
 
-            // no armies placed by me
-            return array($move, $amountLeft);
+        }
+
+        // get region with top priority
+        $topPriority = $priorityQueue->top();
+        if ($topPriority) {
+
+            // ok, all armies on this one (better implementation to come)
+            $amount = $amountLeft;
+            $move->addPlaceArmies($topPriority->getId(), $amount);
+            return array($move, $amountLeft - $amount);
 
         }
+
+        // no armies placed by me
+        return array($move, $amountLeft);
 
     }
 
@@ -99,14 +97,31 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
     }
 
     /**
+     * @see self::attackTransfer
+     */
+    private function transfers(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
+    {
+        return $move;
+    }
+
+    /**
+     * @see self::attackTransfer
+     */
+    private function attacks(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
+    {
+        return $move;
+    }
+
+    /**
      * @inheritDoc
      */
     public function attackTransfer(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
     {
 
-        // transfer armies from region with all me neighbours
-        // too closest region with not all me neighbours, or to closest
-        // continent-link neighbour
+        // transfers
+        $move = $this->transfers($bot, $move, $attackTransferCommand);
+        $move = $this->attacks($bot, $move, $attackTransferCommand);
+
         return $move;
 
     }

@@ -70,8 +70,8 @@ class FirstBot extends \Mastercoding\Conquest\Bot\StrategicBot
         $this->addStrategy($this->captureSouthAmerica);
 
         // pick regions, spread
-        $spread = new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Spread();
-        $this->addRegionPickerStrategy($spread);
+        #$spread = new \Mastercoding\Conquest\Bot\Strategy\RegionPicker\Spread();
+        #$this->addRegionPickerStrategy($spread);
 
     }
 

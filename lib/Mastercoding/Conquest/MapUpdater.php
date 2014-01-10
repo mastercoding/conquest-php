@@ -35,6 +35,24 @@ class MapUpdater
     }
 
     /**
+     * Settings, starting armies
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Command\Settings\Player
+     * $continentsCommand
+     *
+     */
+    public function updatePlaceArmies(\Mastercoding\Conquest\Object\Map $map, \Mastercoding\Conquest\Move\PlaceArmies $placeArmiesMove)
+    {
+
+        // update map with armies
+        foreach ($placeArmiesMove->getPlaceArmies() as $regionId => $armies) {
+            $map->getRegionById($regionId)->addArmies($armies);
+        }
+
+    }
+
+    /**
      * Setup continents for the map
      *
      * @param \Mastercoding\Conquest\Object\Map $map
