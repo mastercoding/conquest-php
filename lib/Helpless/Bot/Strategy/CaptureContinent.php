@@ -109,6 +109,29 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
      */
     private function attacks(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
     {
+        // attack continent regions
+        foreach ($this->continent->getRegions() as $region) {
+
+            // mine?
+            if ($region->getOwner() == $bot->getMap()->getYou()) {
+
+                // neighbours that are not mine?
+                $notMineNeighbors = array();
+                foreach ($region->getNeighbors() as $neighbor) {
+
+                    // add
+                    if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
+                        $notMineNeighbors[] = $neighbor;
+                    }
+
+                }
+                
+                // attack those
+                
+
+            }
+
+        }
         return $move;
     }
 
