@@ -1,8 +1,5 @@
 Opponent moves:
 - update into map with mapupdater (not sure if required, think not)
 
-Place armies move:
-- update into map with mapupdater
-
 Unit tests:
 - Strategies
