@@ -83,7 +83,7 @@ class General
             foreach ($region->getNeighbors() as $neighbor) {
 
                 if ($neighbor->getContinentId() != $continent->getId()) {
-                    $regions->attach($neighbor);
+                    $regions->attach($region);
                 }
 
             }

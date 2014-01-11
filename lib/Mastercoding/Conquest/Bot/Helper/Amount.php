@@ -39,7 +39,7 @@ class Amount
     {
 
         // needed ( we need 1 more to actually keep the region)
-        $amountNeeded = 1 + ($attackingArmies * self::ATTACK_VS_DEFEND);
+        $armiesNeeded = 1 + ($attackingArmies * self::ATTACK_VS_DEFEND);
 
         // we want to add security, fine
         $armiesNeeded += $armiesNeeded * ($addedSecurity / 100);

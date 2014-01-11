@@ -23,13 +23,20 @@ class Path
         foreach ($destinationRegions as $destinationRegion) {
 
             $path = self::shortestPath($map, $startingRegion, $destinationRegion, $onlyYours);
-            $closestQueue->insert(destinationRegion, -1 * count($path));
+            if (null !== $path) {
+                $closestQueue->insert($destinationRegion, -1 * count($path));
+            }
 
         }
 
         // get top
-        $topDestination = $closestQueue->top();
-        return self::shortestPath($map, $startingRegion, $topDestination, $onlyYours);
+        if (count($closestQueue) > 0) {
+            $topDestination = $closestQueue->top();
+            return $topDestination;
+        }
+        
+        // nothing
+        return null;
 
     }
 

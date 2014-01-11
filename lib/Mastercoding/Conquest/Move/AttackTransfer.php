@@ -26,6 +26,16 @@ class AttackTransfer extends AbstractMove
     }
 
     /**
+     * Get attack transfers
+     *
+     * @return array
+     */
+    public function getAttackTransfer()
+    {
+        return $this->attacks;
+    }
+
+    /**
      * Convert to string
      */
     public function toString()

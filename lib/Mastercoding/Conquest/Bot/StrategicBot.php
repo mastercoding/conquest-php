@@ -258,8 +258,16 @@ class StrategicBot extends AbstractBot
             }
         }
 
-        // return move
-        return $response[0];
+        // move
+        $move = $response[0];
+
+        // no move
+        if (count($move->getPlaceArmies()) == 0) {
+            $move = new \Mastercoding\Conquest\Move\NoMove;
+        }
+        
+        // move
+        return $move;
 
     }
 
@@ -283,6 +291,11 @@ class StrategicBot extends AbstractBot
             if ($move instanceof \Mastercoding\Conquest\Move\NoMove) {
                 break;
             }
+        }
+
+        // no moves
+        if (count($move->getAttackTransfer()) == 0) {
+            $move = new \Mastercoding\Conquest\Move\NoMove;
         }
 
         // return move

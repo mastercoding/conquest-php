@@ -126,12 +126,18 @@ abstract class AbstractBot implements BotInterface
 
             case 'Go\PlaceArmies' :
                 $placeArmiesMove = $this->placeArmies($command);
-                $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
-                $mapUpdater->updatePlaceArmies($this->getMap(), $placeArmiesMove);
+
+                // update in map
+                if ($placeArmiesMove instanceof \Mastercoding\Conquest\Move\PlaceArmies) {
+                    $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
+                    $mapUpdater->updatePlaceArmies($this->getMap(), $placeArmiesMove);
+                }
+                
                 return $placeArmiesMove;
 
             case 'Go\AttackTransfer' :
-                return $this->attackTransfer($command);
+                $attackTransfer = $this->attackTransfer($command);
+                return $attackTransfer;
         }
 
     }

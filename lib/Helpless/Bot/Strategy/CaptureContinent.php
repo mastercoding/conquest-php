@@ -23,6 +23,14 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
     private $continent;
 
     /**
+     * @inheritDoc
+     */
+    public function isDone(\Mastercoding\Conquest\Bot\AbstractBot $bot)
+    {
+        return Helper\General::continentCaptured($bot->getMap(), $this->continent);
+    }
+
+    /**
      * Set the continent to capture
      *
      * @param \Mastercoding\Conquest\Object\Continent $continent
@@ -33,10 +41,55 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
     }
 
     /**
+     * Get the continent to capture
+     *
+     * @return \Mastercoding\Conquest\Object\Continent
+     */
+    public function getContinent()
+    {
+        return $this->continent;
+    }
+
+    /**
      * @inheritDoc
      */
     public function placeArmies(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\PlaceArmies $move, $amountLeft, \Mastercoding\Conquest\Command\Go\PlaceArmies $placeArmiesCommand)
     {
+
+        // captured, defend borders
+        if (Helper\General::continentCaptured($bot->getMap(), $this->continent)) {
+
+            // border regions
+            $borderRegions = \Mastercoding\Conquest\Bot\Helper\General::borderRegionsInContinent($bot->getMap(), $this->continent);
+            foreach ($borderRegions as $region) {
+
+                $myArmies = $region->getArmies();
+                foreach ($region->getNeighbors() as $neighbor) {
+
+                    // not own region
+                    if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
+
+                        $neededArmies = Helper\Amount::amountToDefend($neighbor->getArmies(), self::ADDITIONAL_ARMIES_PERCENTAGE);
+                        if ($neededArmies > $myArmies) {
+
+                            //
+                            $additionalArmies = $neededArmies - $myArmies;
+                            $amountToPlace = min($additionalArmies, $amountLeft);
+                            $amountLeft -= $amountToPlace;
+
+                            // place armies
+                            $move->addPlaceArmies($region->getId(), $amountToPlace);
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            return array($move, $amountLeft);
+        }
 
         // get regions owned by me
         $myRegions = \Mastercoding\Conquest\Bot\Helper\General::regionsInContinentByOwner($bot->getMap(), $this->continent, $bot->getMap()->getYou());
@@ -64,8 +117,10 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
         }
 
         // get region with top priority
-        $topPriority = $priorityQueue->top();
-        if ($topPriority) {
+        if (count($priorityQueue) > 0) {
+
+            // top
+            $topPriority = $priorityQueue->top();
 
             // ok, all armies on this one (better implementation to come)
             $amount = $amountLeft;
@@ -122,7 +177,7 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
         $notAllMineNeighboredRegions = new \SplObjectStorage;
         foreach ($this->continent->getRegions() as $region) {
 
-            if (!Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
+            if ($bot->getMap()->getYou() == $region->getOwner() && !Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
                 $notAllMineNeighboredRegions->attach($region);
             }
 
@@ -131,22 +186,36 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
         // loop regions, again
         foreach ($this->continent->getRegions() as $region) {
 
-            // all neighbors mine?
-            if (Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
+            // only one?
+            if ($region->getArmies() == 1) {
+                continue;
+            }
 
-                // continent captured?
+            // all neighbors mine?
+            if ($region->getOwner() == $bot->getMap()->getYou() && Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
+
+                // continent captured? Move to edge
                 if (count($notAllMineNeighboredRegions) == 0) {
 
                     // closest edge
-                    $closestEdge = Helper\Path::closestRegion($bot->getMap(), $region, $borderRegions);
-                    $move->addAttackTransfer($region->getId(), $closestEdge->getId(), $region->getArmies() - 1);
+                    $closestEdge = Helper\Path::closestRegion($bot->getMap(), $region, $borderRegions, true);
+                    if (null !== $closestEdge) {
+
+                        $path = Helper\Path::shortestPath($bot->getMap(), $closestEdge, $region, true);
+                        $move->addAttackTransfer($region->getId(), $path[1]->getId(), $region->getArmies() - 1);
+
+                    }
 
                 } else {
 
                     // shortest path to region with not all mine
-                    $closestRegion = Helper\Path::closestRegion($bot->getMap(), $region, $notAllMineNeighboredRegions);
-                    $move->addAttackTransfer($region->getId(), $closestRegion->getId(), $region->getArmies() - 1);
-                    
+                    $closestRegion = Helper\Path::closestRegion($bot->getMap(), $region, $notAllMineNeighboredRegions, true);
+                    if (null !== $closestRegion) {
+
+                        $path = Helper\Path::shortestPath($bot->getMap(), $closestRegion, $region, true);
+                        $move->addAttackTransfer($region->getId(), $path[1]->getId(), $region->getArmies() - 1);
+                    }
+
                 }
 
             }

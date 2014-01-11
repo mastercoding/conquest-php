@@ -32,4 +32,15 @@ abstract class AbstractStrategy
         return $this->priority;
     }
 
+    /**
+     * Strategy is done? For blocking strategies.
+     *
+     * @param \Mastercoding\Conquest\Bot\AbstractBot $bot
+     * @return bool
+     */
+    public function isDone(\Mastercoding\Conquest\Bot\AbstractBot $bot)
+    {
+        return false;
+    }
+
 }
