@@ -24,6 +24,8 @@ class Parser implements ParserInterface
                 return \Mastercoding\Conquest\Command\SetupMapParser::parse($line);
             case 'go':
                 return \Mastercoding\Conquest\Command\GoParser::parse($line);
+            case 'info':
+                return \Mastercoding\Conquest\Command\InfoParser::parse($line);
 
             case 'pick_starting_regions':
                 return \Mastercoding\Conquest\Command\StartingRegions\Pick::create($components);

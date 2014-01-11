@@ -15,7 +15,7 @@ class OpponentMovesTest extends \PHPUnit_Framework_TestCase
 
         // nr moves
         $this->assertCount(5, $command->getMoves());
-
+        
     }
 
     /**

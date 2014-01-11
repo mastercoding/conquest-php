@@ -25,7 +25,7 @@ class Amount
 
         // we want to add security, fine
         $armiesNeeded += $armiesNeeded * ($addedSecurity / 100);
-        return $armiesNeeded;
+        return ceil($armiesNeeded);
 
     }
 
@@ -43,7 +43,7 @@ class Amount
 
         // we want to add security, fine
         $armiesNeeded += $armiesNeeded * ($addedSecurity / 100);
-        return $armiesNeeded;
+        return ceil($armiesNeeded);
 
     }
 

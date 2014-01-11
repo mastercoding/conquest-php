@@ -76,27 +76,34 @@ abstract class AbstractBot implements BotInterface
         // process command
         switch ( $command->getName() ) {
 
-            case 'Settings\Player':
+            case 'Info\Region' :
+                $move = new \Mastercoding\Conquest\Move\Info;
+                $region = $this->getMap()->getRegionById($command->getRegionId());
+                $info = 'Region ' . $command->getRegionId() . ': ' . $region->getArmies() . ' for ' . $region->getOwner()->getName();
+                $move->setInfo($info);
+                return $move;
+
+            case 'Settings\Player' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->addPlayer($this->getMap(), $command);
                 break;
 
-            case 'Settings\StartingArmies':
+            case 'Settings\StartingArmies' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateStartingArmies($this->getMap(), $command);
                 break;
 
-            case 'SetupMap\Continents':
+            case 'SetupMap\Continents' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->setupContinents($this->getMap(), $command);
                 break;
 
-            case 'SetupMap\Regions':
+            case 'SetupMap\Regions' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->setupRegions($this->getMap(), $command);
                 break;
 
-            case 'SetupMap\Neighbors':
+            case 'SetupMap\Neighbors' :
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::BEFORE_SETUP_NEIGHBORS);
 
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
@@ -106,7 +113,7 @@ abstract class AbstractBot implements BotInterface
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::SETUP_MAP_COMPLETE);
                 break;
 
-            case 'UpdateMap\Update':
+            case 'UpdateMap\Update' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateMap($this->getMap(), $command);
 
@@ -114,16 +121,16 @@ abstract class AbstractBot implements BotInterface
 
                 break;
 
-            case 'StartingRegions\Pick':
+            case 'StartingRegions\Pick' :
                 return $this->pickRegions($command);
 
-            case 'Go\PlaceArmies':
+            case 'Go\PlaceArmies' :
                 $placeArmiesMove = $this->placeArmies($command);
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updatePlaceArmies($this->getMap(), $placeArmiesMove);
                 return $placeArmiesMove;
 
-            case 'Go\AttackTransfer':
+            case 'Go\AttackTransfer' :
                 return $this->attackTransfer($command);
         }
 

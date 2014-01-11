@@ -117,7 +117,7 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
      * Attack the regions in the most efficient way (or some if all is not
      * possible)
      */
-    private function attackRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, Array $regions)
+    private function attackRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \SplObjectStorage $regions)
     {
 
         foreach ($regions as $region) {
@@ -130,8 +130,8 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
 
                 if ($neighbor->getOwner() == $bot->getMap()->getYou()) {
 
-                    // enough
-                    if ($neighbor->getArmies() >= $neededArmies) {
+                    // enough (needs to be >, we need 1 left on region)
+                    if ($neighbor->getArmies() > $neededArmies) {
 
                         // attack with this one
                         $neighbor->removeArmies($neededArmies);
@@ -155,28 +155,28 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
     private function attacks(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
     {
         // attack continent regions
+        $notMineNeighbors = new \SplObjectStorage;
         foreach ($this->continent->getRegions() as $region) {
 
             // mine?
             if ($region->getOwner() == $bot->getMap()->getYou()) {
 
                 // neighbours that are not mine?
-                $notMineNeighbors = array();
                 foreach ($region->getNeighbors() as $neighbor) {
 
                     // add
                     if ($neighbor->getOwner() != $bot->getMap()->getYou() && $neighbor->getContinentId() == $this->continent->getId()) {
-                        $notMineNeighbors[] = $neighbor;
+                        $notMineNeighbors->attach($neighbor);
                     }
 
                 }
 
-                // attack those
-                $move = $this->attackRegions($bot, $move, $notMineNeighbors);
-
             }
 
         }
+
+        // attack those
+        $move = $this->attackRegions($bot, $move, $notMineNeighbors);
         return $move;
     }
 
