@@ -198,12 +198,19 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
                 if (count($notAllMineNeighboredRegions) == 0) {
 
                     // closest edge
-                    $closestEdge = Helper\Path::closestRegion($bot->getMap(), $region, $borderRegions, true);
-                    if (null !== $closestEdge) {
+                    try {
+                        $closestEdge = Helper\Path::closestRegion($bot->getMap(), $region, $borderRegions, true);
+                        if (null !== $closestEdge) {
 
-                        $path = Helper\Path::shortestPath($bot->getMap(), $closestEdge, $region, true);
-                        $move->addAttackTransfer($region->getId(), $path[1]->getId(), $region->getArmies() - 1);
+                            $path = Helper\Path::shortestPath($bot->getMap(), $closestEdge, $region, true);
+                            $move->addAttackTransfer($region->getId(), $path[1]->getId(), $region->getArmies() - 1);
 
+                        }
+
+                    } catch ( \Exception $e ) {
+                        
+                        // region is border, move to other continent?
+                        
                     }
 
                 } else {

@@ -138,8 +138,8 @@ class CrossContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrateg
             if ($fromRegion->getArmies() > $neededArmies) {
 
                 // attack with this one, all armies!
-                $fromRegion->removeArmies($neededArmies);
                 $move->addAttackTransfer($fromRegion->getId(), $toRegion->getId(), $fromRegion->getArmies() - 1);
+                $fromRegion->removeArmies($fromRegion->getArmies() - 1);
 
             }
 
