@@ -165,7 +165,7 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
                 foreach ($region->getNeighbors() as $neighbor) {
 
                     // add
-                    if ($neighbor->getOwner() != $bot->getMap()->getYou()) {
+                    if ($neighbor->getOwner() != $bot->getMap()->getYou() && $neighbor->getContinentId() == $this->continent->getId()) {
                         $notMineNeighbors[] = $neighbor;
                     }
 
