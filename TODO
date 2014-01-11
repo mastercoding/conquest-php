@@ -1,5 +1,9 @@
-Opponent moves:
-- update into map with mapupdater (not sure if required, think not)
+Strategies:
+- Defend borders evenly
+- Cross borders differently
+- Blocking strategies, capture one after other
+- WorldDominiation fallback, just capture everything
+- Eval and modify strategies
 
 Unit tests:
 - Strategies
