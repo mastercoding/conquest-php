@@ -128,6 +128,17 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
     }
 
     /**
+     * Remove number of armies
+     *
+     * @param int $armies
+     */
+    public function removeArmies($armies)
+    {
+        $this->armies -= $armies;
+        return $this;
+    }
+
+    /**
      * Get nr armies
      *
      * @return int

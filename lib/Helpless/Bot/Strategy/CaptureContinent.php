@@ -4,6 +4,15 @@ namespace Helpless\Bot\Strategy;
 
 class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface, \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface, \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface
 {
+
+    /**
+     * Need x percent additional armies then the theoretical amount to start an
+     * attack
+     *
+     * @var int
+     */
+    const ADDITIONAL_ARMIES_PERCENTAGE = 30;
+
     /**
      * The continent to caputre
      *
@@ -105,6 +114,42 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
     }
 
     /**
+     * Attack the regions in the most efficient way (or some if all is not
+     * possible)
+     */
+    private function attackRegions(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, Array $regions)
+    {
+
+        foreach ($regions as $region) {
+
+            // wealthy enough to attack?
+            $neededArmies = \Mastercoding\Conquest\Bot\Helper\Amount::amountToAttack($region->getArmies(), self::ADDITIONAL_ARMIES_PERCENTAGE);
+
+            // find wealthy neigbor
+            foreach ($region->getNeighbors() as $neighbor) {
+
+                if ($neighbor->getOwner() == $bot->getMap()->getYou()) {
+
+                    // enough
+                    if ($neighbor->getArmies() >= $neededArmies) {
+
+                        // attack with this one
+                        $neighbor->removeArmies($neededArmies);
+                        $move->addAttackTransfer($neighbor->getId(), $region->getId(), $neededArmies);
+                        break;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return $move;
+    }
+
+    /**
      * @see self::attackTransfer
      */
     private function attacks(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
@@ -125,9 +170,9 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
                     }
 
                 }
-                
+
                 // attack those
-                
+                $move = $this->attackRegions($bot, $move, $notMineNeighbors);
 
             }
 
