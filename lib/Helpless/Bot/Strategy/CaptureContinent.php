@@ -2,6 +2,8 @@
 
 namespace Helpless\Bot\Strategy;
 
+use \Mastercoding\Conquest\Bot\Helper;
+
 class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrategy implements \Mastercoding\Conquest\Bot\Strategy\RegionPicker\RegionPickerInterface, \Mastercoding\Conquest\Bot\Strategy\AttackTransfer\AttackTransferInterface, \Mastercoding\Conquest\Bot\Strategy\ArmyPlacement\ArmyPlacementInterface
 {
 
@@ -110,6 +112,47 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
      */
     private function transfers(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\AttackTransfer $move, \Mastercoding\Conquest\Command\Go\AttackTransfer $attackTransferCommand)
     {
+
+        // move from region with only me neighbors
+        // to region with not only me neighbors,
+        // or, if entire continent is ours, move to continent edges
+        $borderRegions = \Mastercoding\Conquest\Bot\Helper\General::borderRegionsInContinent($bot->getMap(), $this->continent);
+
+        // not all mine
+        $notAllMineNeighboredRegions = new \SplObjectStorage;
+        foreach ($this->continent->getRegions() as $region) {
+
+            if (!Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
+                $notAllMineNeighboredRegions->attach($region);
+            }
+
+        }
+
+        // loop regions, again
+        foreach ($this->continent->getRegions() as $region) {
+
+            // all neighbors mine?
+            if (Helper\General::allYoursNeighbors($bot->getMap(), $region)) {
+
+                // continent captured?
+                if (count($notAllMineNeighboredRegions) == 0) {
+
+                    // closest edge
+                    $closestEdge = Helper\Path::closestRegion($bot->getMap(), $region, $borderRegions);
+                    $move->addAttackTransfer($region->getId(), $closestEdge->getId(), $region->getArmies() - 1);
+
+                } else {
+
+                    // shortest path to region with not all mine
+                    $closestRegion = Helper\Path::closestRegion($bot->getMap(), $region, $notAllMineNeighboredRegions);
+                    $move->addAttackTransfer($region->getId(), $closestRegion->getId(), $region->getArmies() - 1);
+                    
+                }
+
+            }
+
+        }
+
         return $move;
     }
 

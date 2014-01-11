@@ -12,4 +12,5 @@ $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 $bot = new \Helpless\Bot\FirstBot($map, $eventDispatcher);
 
 // run
-$bot->run(STDIN, STDOUT);
+$commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
+$bot->run($commandParser, STDIN, STDOUT);

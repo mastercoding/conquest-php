@@ -6,6 +6,34 @@ class Path
 {
 
     /**
+     * Find the shortest path from starting region to closest destination region
+     * using
+     * breadth-first search (BFS).
+     *
+     * @param \Mastercoding\Conquest\Object\map $map
+     * @param \Mastercoding\Conquest\Object\Region $startingRegion
+     * @param \SplObjectStorage $destinationRegions
+     * @param bool $onlyYours
+     */
+    public static function closestRegion(\Mastercoding\Conquest\Object\map $map, \Mastercoding\Conquest\Object\Region $startingRegion, \SplObjectStorage $destinationRegions, $onlyYours = false)
+    {
+
+        // missuse priority queu
+        $closestQueue = new \SplPriorityQueue;
+        foreach ($destinationRegions as $destinationRegion) {
+
+            $path = self::shortestPath($map, $startingRegion, $destinationRegion, $onlyYours);
+            $closestQueue->insert(destinationRegion, -1 * count($path));
+
+        }
+
+        // get top
+        $topDestination = $closestQueue->top();
+        return self::shortestPath($map, $startingRegion, $topDestination, $onlyYours);
+
+    }
+
+    /**
      * Find the shortest path from starting region to destination region using
      * breadth-first search (BFS). Don't know if it's according to spec, but it
      * works.
@@ -81,7 +109,7 @@ class Path
             }
 
         }
-        
+
         // no path
         return null;
 

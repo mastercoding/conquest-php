@@ -46,6 +46,29 @@ class General
     }
 
     /**
+     * Check if all neighbors for a region are yours
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Object\Region $region
+     */
+    public static function allYoursNeighbors(\Mastercoding\Conquest\Object\map $map, \Mastercoding\Conquest\Object\Region $region)
+    {
+
+        // neighbors
+        foreach ($region->getNeighbors() as $neighbor) {
+
+            // not all mine, continue in parent loop
+            if ($neighbor->getOwner() != $map->getYou()) {
+                return false;
+            }
+
+        }
+        
+        return true;
+
+    }
+
+    /**
      * Get regions in a continent that link to another continent
      *
      * @param \Mastercoding\Conquest\Object\Map $map

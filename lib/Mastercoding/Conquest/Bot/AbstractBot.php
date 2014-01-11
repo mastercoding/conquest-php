@@ -142,14 +142,14 @@ abstract class AbstractBot implements BotInterface
      * @param $inputHandle
      * @param $outputHandle
      */
-    public function run($inputHandle, $outputHandle)
+    public function run($commandParser, $inputHandle, $outputHandle)
     {
 
-        // setup parser
-        $commandParser = new \Mastercoding\Conquest\Command\Parser\Parser();
-
         // loop
-        while ($line = trim(fgets($inputHandle))) {
+        while ($line = fgets($inputHandle)) {
+
+            // trim
+            $line = trim($line);
 
             // parse command
             $command = $commandParser->parse($line);
