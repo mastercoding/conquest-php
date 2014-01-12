@@ -6,4 +6,4 @@ A Conquest PHP implementation for www.theaigames.com. The base should be ready t
 Installation
 ============
 
-The easiest way to install is through composer.
+The easiest way to install is through composer..
