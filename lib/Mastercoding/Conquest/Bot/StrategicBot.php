@@ -265,7 +265,7 @@ class StrategicBot extends AbstractBot
         if (count($move->getPlaceArmies()) == 0) {
             $move = new \Mastercoding\Conquest\Move\NoMove;
         }
-        
+
         // move
         return $move;
 

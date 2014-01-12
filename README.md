@@ -1,4 +1,9 @@
 conquest-php
 ============
 
-A Conquest PHP implementation for www.theaigames.com. It's not ready for use yet.
+A Conquest PHP implementation for www.theaigames.com. The base should be ready to use.
+
+Installation
+============
+
+The easiest way to install is through composer.
