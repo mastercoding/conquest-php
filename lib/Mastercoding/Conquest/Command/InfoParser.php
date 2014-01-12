@@ -19,6 +19,8 @@ class InfoParser implements \Mastercoding\Conquest\Command\Parser\ParserInterfac
 
             case 'region':
                 return Info\Region::create($components);
+            case 'starting_armies':
+                return Info\StartingArmies::create($components);
             default:
                 throw new \Exception('Unimplemented info: ' . $components[1]);
         }

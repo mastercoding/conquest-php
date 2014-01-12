@@ -125,6 +125,7 @@ class CaptureContinent extends \Mastercoding\Conquest\Bot\Strategy\AbstractStrat
             // ok, all armies on this one (better implementation to come)
             $amount = $amountLeft;
             $move->addPlaceArmies($topPriority->getId(), $amount);
+            
             return array($move, $amountLeft - $amount);
 
         }

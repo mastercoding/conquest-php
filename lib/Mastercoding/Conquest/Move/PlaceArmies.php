@@ -20,7 +20,11 @@ class PlaceArmies extends AbstractMove
      */
     public function addPlaceArmies($regionId, $armies)
     {
-        $this->regions[$regionId] = $armies;
+        if (isset($this->regions[$regionId])) {
+            $this->regions[$regionId] += $armies;
+        } else {
+            $this->regions[$regionId] = $armies;
+        }
         return $this;
     }
 
