@@ -1,5 +1,7 @@
 {
   "name": "mastercoding/conquest-php",
+  "type": "library",
+  "keywords": ["aigames","conquest", "php"],
   "description": "A Conquest PHP implementation for www.theaigames.com",
   "license": "MIT",
   "authors": [
