@@ -1,4 +1,5 @@
 {
+  "name": "mastercoding/conquest-php",
   "require": {
     "symfony/event-dispatcher": "dev-master"
   },
