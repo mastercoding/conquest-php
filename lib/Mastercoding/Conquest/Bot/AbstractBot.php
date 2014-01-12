@@ -151,7 +151,7 @@ abstract class AbstractBot implements BotInterface
             case 'OpponentMoves\Moves':
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->uppateOpponentMoves($this->getMap(), $command, $this->getLastCommand('UpdateMap\Update'));
-                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP);
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_OPPONENT_MOVES);
                 break;
 
             case 'StartingRegions\Pick':

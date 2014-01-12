@@ -30,4 +30,11 @@ class Event
      * @var string
      */
     const AFTER_UPDATE_MAP = 'AFTER_UPDATE_MAP';
+
+    /**
+     * After update opponent moves
+     *
+     * @var string
+     */
+    const AFTER_UPDATE_OPPONENT_MOVES = 'AFTER_UPDATE_OPPONENT_MOVES';
 }
