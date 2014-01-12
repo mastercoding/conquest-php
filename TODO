@@ -1,12 +1,2 @@
-Strategies:
-- Defend borders evenly
-- Cross borders differently
-- Blocking strategies, capture one after other
-- WorldDominiation fallback, just capture everything
-- Attack with all armies if there are no other enemy armies surounding this region
-  - Maybe move the attack region logic to a seperate function, general for all
-
-- Eval and modify strategies
-
 Unit tests:
 - Strategies
