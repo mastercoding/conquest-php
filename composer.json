@@ -10,7 +10,6 @@
       "email": "jop@mastercoding.nl"
     }
   ],
-
   "require": {
     "symfony/event-dispatcher": "~2.4"
   },
@@ -19,7 +18,7 @@
   },
   "autoload": {
     "psr-0": {
-      "Mastercoding\\": "lib/"
+      "Mastercoding\\Conquest\\": "lib/"
     }
   },
   "minimum-stability": "dev"
