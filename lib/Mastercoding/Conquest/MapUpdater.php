@@ -115,6 +115,67 @@ class MapUpdater
     }
 
     /**
+     * Updates the map $map by processing the opponents moves. We only need to do
+     * this for regions not present in lasts update map command
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Command\OpponentMoves\Moves $movesCommand
+     * @param \Mastercoding\Conquest\Command\UpdateMap\Update $lastUpdateCommand
+     */
+    public function uppateOpponentMoves(\Mastercoding\Conquest\Object\Map $map, \Mastercoding\Conquest\Command\OpponentMoves\Moves $movesCommand, \Mastercoding\Conquest\Command\UpdateMap\Update $lastUpdateCommand)
+    {
+
+        // regions not present in last update
+        $moves = new \SplObjectStorage;
+        foreach ($movesCommand->getMoves() as $move) {
+
+            // only attack/transfer
+            if ($move instanceof \Mastercoding\Conquest\Move\AttackTransfer) {
+
+                // attack transfer
+                $attackTransfer = $move->getAttackTransfer();
+                $regionId = $attackTransfer[0]['regionToId'];
+
+                // ok
+                foreach ($lastUpdateCommand->getUpdates() as $update) {
+
+                    if ($update['regionId'] == $regionId) {
+                        continue 2;
+                    }
+
+                }
+
+                // not same
+                $moves->attach($move);
+
+            }
+
+        }
+        
+        
+        // ok, create update map command
+        $updateMap = new \Mastercoding\Conquest\Command\UpdateMap\Update;
+        foreach ($moves as $move) {
+
+            foreach ($move->getAttackTransfer() as $attackTransfer) {
+                
+                $regionId = $attackTransfer['regionToId'];
+                $owner = $move->getPlayerName();
+                $armies = $attackTransfer['armies'];
+
+                // add update
+                $updateMap->addUpdate(array('regionId' => $regionId, 'owner' => $owner, 'armies' => $armies));
+
+            }
+
+        }
+        
+        // update
+        $this->updateMap($map, $updateMap);
+
+    }
+
+    /**
      * Updates the map $map by processing the update map command
      *
      * @param \Mastercoding\Conquest\Object\Map $map

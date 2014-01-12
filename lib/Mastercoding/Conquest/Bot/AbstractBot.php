@@ -20,6 +20,13 @@ abstract class AbstractBot implements BotInterface
     private $eventDispatcher;
 
     /**
+     * Command history, keep only one
+     *
+     * @var Array
+     */
+    private $commands = array();
+
+    /**
      * Construct the bot
      *
      * @param \Mastercoding\Conquest\Object\Map $map
@@ -29,6 +36,21 @@ abstract class AbstractBot implements BotInterface
     {
         $this->map = $map;
         $this->eventDispatcher = $eventDispatcher;
+
+        $this->commands = array();
+    }
+
+    /**
+     * Get last command of specific type
+     *
+     * @return \Mastercoding\Conquest\Command\AbstractCommand|null
+     */
+    public function getLastCommand($commandName)
+    {
+        if (isset($this->commands[$commandName])) {
+            return $this->commands[$commandName];
+        }
+        return null;
     }
 
     /**
@@ -72,6 +94,9 @@ abstract class AbstractBot implements BotInterface
         if (null === $command) {
             return null;
         }
+
+        // store last command
+        $this->commands[$command->getName()] = $command;
 
         // process command
         switch ( $command->getName() ) {
@@ -120,9 +145,13 @@ abstract class AbstractBot implements BotInterface
             case 'UpdateMap\Update':
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateMap($this->getMap(), $command);
-
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP);
+                break;
 
+            case 'OpponentMoves\Moves':
+                $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
+                $mapUpdater->uppateOpponentMoves($this->getMap(), $command, $this->getLastCommand('UpdateMap\Update'));
+                $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP);
                 break;
 
             case 'StartingRegions\Pick':

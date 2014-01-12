@@ -121,7 +121,7 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $mapUpdate = new \Mastercoding\Conquest\Command\UpdateMap\Update;
 
         // add some updates
-        $mapUpdate->addUpdate(array('regionId' => 1, 'owner' => 'neutral', 'armies' => 2));
+        $mapUpdate->addUpdate(array('regionId' => 1, 'owner' => 'player1', 'armies' => 2));
         $mapUpdate->addUpdate(array('regionId' => 2, 'owner' => 'player1', 'armies' => 3));
         $mapUpdate->addUpdate(array('regionId' => 4, 'owner' => 'neutral', 'armies' => 4));
         $mapUpdate->addUpdate(array('regionId' => 7, 'owner' => 'neutral', 'armies' => 5));
@@ -130,13 +130,39 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->mapUpdater->updateMap($map, $mapUpdate);
 
         // assert owners
-        $this->assertEquals('neutral', $map->getRegionById(1)->getOwner()->getName());
         $this->assertEquals('player1', $map->getRegionById(2)->getOwner()->getName());
         $this->assertEquals('unknown', $map->getRegionById(3)->getOwner()->getName());
+        $this->assertEquals('neutral', $map->getRegionById(4)->getOwner()->getName());
 
         // asert armies
         $this->assertEquals(4, $map->getRegionById(4)->getArmies());
         $this->assertEquals(2, $map->getRegionById(1)->getArmies());
+
+        return $map;
+
+    }
+
+    /**
+     * @depends testUpdateMap
+     */
+    public function testOpponentMoves(\Mastercoding\Conquest\Object\Map $map)
+    {
+
+        $commandParser = new \Mastercoding\Conquest\Command\Parser\Parser;
+        $lastUpdateCommand = $commandParser->parse('update_map 1 player1 4');
+        $this->mapUpdater->updateMap($map, $lastUpdateCommand);
+
+        // opponent moves
+        $opponentMovesCommand = $commandParser->parse('opponent_moves player2 attack/transfer 42 1 3 player2 attack/transfer 42 2 5');
+
+        // update
+        $this->mapUpdater->uppateOpponentMoves($map, $opponentMovesCommand, $lastUpdateCommand);
+
+        // verify
+        $this->assertEquals('player1', $map->getRegionById(1)->getOwner()->getName());
+        $this->assertEquals(4, $map->getRegionById(1)->getArmies());
+        $this->assertEquals('player2', $map->getRegionById(2)->getOwner()->getName());
+
     }
 
     public function testStartingArmies()
@@ -172,7 +198,7 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->mapUpdater->updatePlaceArmies($map, $move);
 
         // validate
-        $this->assertEquals(7, $map->getRegionById(1)->getArmies());
+        $this->assertEquals(9, $map->getRegionById(1)->getArmies());
         $this->assertEquals(4, $map->getRegionById(3)->getArmies());
 
     }
