@@ -162,6 +162,7 @@ class MapUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('player1', $map->getRegionById(1)->getOwner()->getName());
         $this->assertEquals(4, $map->getRegionById(1)->getArmies());
         $this->assertEquals('player2', $map->getRegionById(2)->getOwner()->getName());
+        $this->assertEquals(5, $map->getRegionById(2)->getArmies());
 
     }
 
