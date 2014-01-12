@@ -1,5 +1,5 @@
 # conquest-php
-A Conquest PHP implementation for www.theaigames.com. The base should be ready to use.
+A Conquest PHP implementation for www.theaigames.com.
 
 ## Installation
 The fastest way to install Conquest PHP in your project is using Composer (http://getcomposer.org/).
