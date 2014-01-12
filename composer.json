@@ -1,5 +1,14 @@
 {
   "name": "mastercoding/conquest-php",
+  "description": "A Conquest PHP implementation for www.theaigames.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jop Peters",
+      "email": "jop@mastercoding.nl"
+    }
+  ],
+
   "require": {
     "symfony/event-dispatcher": "dev-master"
   },
