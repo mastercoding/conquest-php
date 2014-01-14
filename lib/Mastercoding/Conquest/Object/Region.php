@@ -149,6 +149,16 @@ class Region extends \Mastercoding\Conquest\Object\AbstractObject
     }
 
     /**
+     * Get nr armies we can attack with (amount-1)
+     *
+     * @return int
+     */
+    public function getAttackableArmies()
+    {
+        return $this->getArmies() - 1;
+    }
+
+    /**
      * Set owner
      *
      * @param Owner
