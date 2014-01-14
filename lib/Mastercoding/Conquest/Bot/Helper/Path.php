@@ -34,7 +34,7 @@ class Path
             $topDestination = $closestQueue->top();
             return $topDestination;
         }
-        
+
         // nothing
         return null;
 
@@ -84,6 +84,11 @@ class Path
                     $parents[$neighbor->getId()] = $queue[$i];
                     $visited[$neighbor->getId()] = true;
 
+                    // add neighbors to queue
+                    if ($neighbor->hasNeighbors()) {
+                        $queue[] = $neighbor;
+                    }
+
                 }
 
                 // this one the one we want?
@@ -103,13 +108,6 @@ class Path
                     }
 
                     return $path;
-
-                } else {
-
-                    // add neighbors to queue
-                    if ($neighbor->hasNeighbors()) {
-                        $queue[] = $neighbor;
-                    }
 
                 }
 

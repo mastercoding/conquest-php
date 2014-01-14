@@ -95,4 +95,21 @@ class PathTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testUnwalkablePath()
+    {
+
+        // unwalkable
+        $unwalkable = 'update_map 1 player1 2 2 player1 2 3 player1 2 4 player1 2 5 neutral 2 6 neutral 2 7 neutral 2 8 neutral 2 9 player1 2';
+        $command = $this->commandParser->parse($unwalkable);
+        $this->bot->processCommand($command);
+        
+        // path is unwalkable: region 1 to 9
+        $regionFrom = $this->bot->getMap()->getRegionById(1);
+        $regionTo = $this->bot->getMap()->getRegionById(9);
+        
+        // no path that is mine
+        $this->assertNull(\Mastercoding\Conquest\Bot\Helper\Path::shortestPath($this->bot->getMap(), $regionFrom, $regionTo, true));
+        
+    }
+
 }
