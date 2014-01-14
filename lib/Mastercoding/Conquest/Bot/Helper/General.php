@@ -63,7 +63,30 @@ class General
             }
 
         }
-        
+
+        return true;
+
+    }
+
+    /**
+     * Check if all neighbors are neutral or yours
+     *
+     * @param \Mastercoding\Conquest\Object\Map $map
+     * @param \Mastercoding\Conquest\Object\Region $region
+     */
+    public static function allNeutralOrYoursNeighbors(\Mastercoding\Conquest\Object\map $map, \Mastercoding\Conquest\Object\Region $region)
+    {
+
+        // neighbors
+        foreach ($region->getNeighbors() as $neighbor) {
+
+            // not all mine, continue in parent loop
+            if ($neighbor->getOwner() != $map->getYou() && $neighbor->getOwner()->getName() != \Mastercoding\Conquest\Object\Owner\AbstractOwner::NEUTRAL) {
+                return false;
+            }
+
+        }
+
         return true;
 
     }
