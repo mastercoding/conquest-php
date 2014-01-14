@@ -111,6 +111,10 @@ abstract class AbstractBot implements BotInterface
                 $move = new \Mastercoding\Conquest\Move\Info;
                 $move->setInfo('Starting armies: ' . $this->getMap()->getStartingArmies());
                 return $move;
+            case 'Info\Round':
+                $move = new \Mastercoding\Conquest\Move\Info;
+                $move->setInfo('Round nr: ' . $this->getMap()->getRound());
+                return $move;
 
             case 'Settings\Player':
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
@@ -158,6 +162,10 @@ abstract class AbstractBot implements BotInterface
                 return $this->pickRegions($command);
 
             case 'Go\PlaceArmies':
+
+                // new round
+                $this->getMap()->increaseRound();
+
                 $placeArmiesMove = $this->placeArmies($command);
 
                 // update in map

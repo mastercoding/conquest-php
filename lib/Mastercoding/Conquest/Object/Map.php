@@ -28,15 +28,56 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
     private $continents;
 
     /**
+     * The round number (by counting place armies moves)
+     *
+     * @var int
+     */
+    private $round;
+
+    /**
      * Construct a new map, empty at first
      */
     public function __construct()
     {
         $this->continents = new \SplObjectStorage;
         $this->players = new \SplObjectStorage;
-        
+
         // 5 as default
         $this->startingArmies = 5;
+        $this->round = 0;
+
+    }
+
+    /**
+     * Increase round
+     *
+     * @param int $round
+     */
+    public function increaseRound()
+    {
+        $this->round += 1;
+        return $this;
+    }
+
+    /**
+     * Set round number
+     *
+     * @param int $round
+     */
+    public function setRound($round)
+    {
+        $this->round = $round;
+        return $this;
+    }
+
+    /**
+     * Get round number
+     *
+     * @return int
+     */
+    public function getRound()
+    {
+        return $this->round;
     }
 
     /**
@@ -174,7 +215,7 @@ class Map extends \Mastercoding\Conquest\Object\AbstractObject
         foreach ($this->getContinents() as $continent) {
 
             foreach ($continent->getRegions() as $region) {
-                
+
                 if ($region->getOwner()->getName() == $player->getName()) {
                     $myRegions->attach($region);
                 }
