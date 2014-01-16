@@ -281,16 +281,33 @@ class StrategicBot extends AbstractBot
         $move = new \Mastercoding\Conquest\Move\AttackTransfer;
         $move->setPlayerName($this->getMap()->getYou()->getName());
 
-        // only one region picker can pick
+        // do all attack moves
         foreach ($this->attackTransferStrategies as $strategy) {
 
             // move
-            $move = $strategy->attackTransfer($this, $move, $attackTransferCommand);
+            $move = $strategy->attack($this, $move, $attackTransferCommand);
 
-            // no move
+            // no move, overwrite
             if ($move instanceof \Mastercoding\Conquest\Move\NoMove) {
                 break;
             }
+        }
+
+        // do transfers
+        if (!($move instanceof \Mastercoding\Conquest\Move\NoMove)) {
+
+            // only one region picker can pick
+            foreach ($this->attackTransferStrategies as $strategy) {
+
+                // move
+                $move = $strategy->transfer($this, $move, $attackTransferCommand);
+
+                // no move
+                if ($move instanceof \Mastercoding\Conquest\Move\NoMove) {
+                    break;
+                }
+            }
+
         }
 
         // no moves
