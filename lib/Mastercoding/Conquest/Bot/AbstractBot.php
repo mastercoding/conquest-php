@@ -111,6 +111,9 @@ abstract class AbstractBot implements BotInterface
 
         // store last command
         $this->commands[$command->getName()][] = $command;
+        if (count($this->commands[$command->getName()]) > 10) {
+            array_shift($this->commands[$command->getName()]);
+        }
 
         // process command
         switch ( $command->getName() ) {
