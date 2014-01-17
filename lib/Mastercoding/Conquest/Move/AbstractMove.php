@@ -44,4 +44,11 @@ abstract class AbstractMove implements MoveInterface
         return str_replace('{{player_name}}', $this->getPlayerName(), $string);
     }
 
+    public function getName()
+    {
+        $name = get_class($this);
+        $name = str_replace('Mastercoding\\Conquest\\Move\\', '', $name);
+        return $name;
+    }
+
 }

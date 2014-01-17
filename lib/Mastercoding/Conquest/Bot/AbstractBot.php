@@ -27,6 +27,13 @@ abstract class AbstractBot implements BotInterface
     private $commands = array();
 
     /**
+     * Move history, keep last 10
+     *
+     * @var Array
+     */
+    private $moves = array();
+
+    /**
      * Construct the bot
      *
      * @param \Mastercoding\Conquest\Object\Map $map
@@ -38,6 +45,7 @@ abstract class AbstractBot implements BotInterface
         $this->eventDispatcher = $eventDispatcher;
 
         $this->commands = array();
+        $this->moves = array();
     }
 
     /**
@@ -63,6 +71,21 @@ abstract class AbstractBot implements BotInterface
     {
         if (isset($this->commands[$commandName])) {
             return $this->commands[$commandName];
+        }
+        return null;
+    }
+
+    /**
+
+     /**
+     * Get moves of specific type
+     *
+     * @return array
+     */
+    public function getMoves($moveName)
+    {
+        if (isset($this->moves[$moveName])) {
+            return $this->moves[$moveName];
         }
         return null;
     }
@@ -123,35 +146,37 @@ abstract class AbstractBot implements BotInterface
                 $region = $this->getMap()->getRegionById($command->getRegionId());
                 $info = 'Region ' . $command->getRegionId() . ': ' . $region->getArmies() . ' for ' . $region->getOwner()->getName();
                 $move->setInfo($info);
-                return $move;
+                break;
+
             case 'Info\StartingArmies' :
                 $move = new \Mastercoding\Conquest\Move\Info;
                 $move->setInfo('Starting armies: ' . $this->getMap()->getStartingArmies());
-                return $move;
+                break;
+
             case 'Info\Round' :
                 $move = new \Mastercoding\Conquest\Move\Info;
                 $move->setInfo('Round nr: ' . $this->getMap()->getRound());
-                return $move;
+                break;
 
             case 'Settings\Player' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->addPlayer($this->getMap(), $command);
-                break;
+                return;
 
             case 'Settings\StartingArmies' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateStartingArmies($this->getMap(), $command);
-                break;
+                return;
 
             case 'SetupMap\Continents' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->setupContinents($this->getMap(), $command);
-                break;
+                return;
 
             case 'SetupMap\Regions' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->setupRegions($this->getMap(), $command);
-                break;
+                return;
 
             case 'SetupMap\Neighbors' :
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::BEFORE_SETUP_NEIGHBORS);
@@ -161,42 +186,48 @@ abstract class AbstractBot implements BotInterface
 
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_SETUP_NEIGHBORS);
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::SETUP_MAP_COMPLETE);
-                break;
+                return;
 
             case 'UpdateMap\Update' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->updateMap($this->getMap(), $command);
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_MAP);
-                break;
+                return;
 
             case 'OpponentMoves\Moves' :
                 $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
                 $mapUpdater->uppateOpponentMoves($this->getMap(), $command, $this->getLastCommand('UpdateMap\Update'));
                 $this->getEventDispatcher()->dispatch(\Mastercoding\Conquest\Event::AFTER_UPDATE_OPPONENT_MOVES);
-                break;
+                return;
 
             case 'StartingRegions\Pick' :
-                return $this->pickRegions($command);
+                $move = $this->pickRegions($command);
+                break;
 
             case 'Go\PlaceArmies' :
 
                 // new round
                 $this->getMap()->increaseRound();
-
-                $placeArmiesMove = $this->placeArmies($command);
+                $move = $this->placeArmies($command);
 
                 // update in map
-                if ($placeArmiesMove instanceof \Mastercoding\Conquest\Move\PlaceArmies) {
+                if ($move instanceof \Mastercoding\Conquest\Move\PlaceArmies) {
                     $mapUpdater = new \Mastercoding\Conquest\MapUpdater;
-                    $mapUpdater->updatePlaceArmies($this->getMap(), $placeArmiesMove);
+                    $mapUpdater->updatePlaceArmies($this->getMap(), $move);
                 }
-
-                return $placeArmiesMove;
+                break;
 
             case 'Go\AttackTransfer' :
-                $attackTransfer = $this->attackTransfer($command);
-                return $attackTransfer;
+                $move = $this->attackTransfer($command);
+                break;
         }
+
+        // store
+        $this->moves[$move->getName()][] = $move;
+        if (count($this->moves[$move->getName()]) > 10) {
+            array_shift($this->moves[$move->getName()]);
+        }
+        return $move;
 
     }
 
