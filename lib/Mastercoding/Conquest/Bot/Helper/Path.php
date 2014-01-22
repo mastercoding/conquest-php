@@ -103,7 +103,7 @@ class Path
                     while (is_object($object) && ++$j) {
 
                         $path[] = $object;
-                        $object = $parents[$object->getId()];
+                        $object = isset($parents[$object->getId()]) ? $parents[$object->getId()] : null;
 
                     }
 
