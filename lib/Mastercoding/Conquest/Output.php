@@ -14,9 +14,6 @@ class Output
     public static function move(\Mastercoding\Conquest\Bot\AbstractBot $bot, \Mastercoding\Conquest\Move\MoveInterface $move, $outputHandle)
     {
 
-        // get you
-        $you = $bot->getMap()->getYou();
-
         // move as string
         $move = $move->toString();
 
